@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=./env.schema.json
+
+backendURL: http://localhost:4000
+dev: true
+frontendURL: http://localhost:3000
+mongoURL: mongodb://localhost:27017/corpactive
+port: 4000
+
+translationUrl: ''
+
+redis:
+    host: localhost
+    port: 6900
+    password: ''
+
+email:
+    mailSendFrom: no-reply@getonnet.dev
+    emailQueueName: emailQueue
+
+auth:
+    jwtSecret: secret@!@@~
+    accessTokenExpiresIn: '1h'
+    refreshTokenExpiresIn: '1y'
+
+s3:
+    accessKey: test
+    secretKey: test
+    bucketId: test
+    domainName: test
+    region: test
+
+ses:
+    region: test
+    accessKeyId: test
+    secretAccessKey: test
+
+adminCredential:
+    email: test@test.com
+    password: test
+
+firebase:
+    privateKey: test
+    clientEmail: test
+    projectId: test
+    packageName: test

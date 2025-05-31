@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = []
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+// Enums for user types
+enum AuthType {
+    END_USER
+    ADMIN
+    SUPER_ADMIN
+}
+
+enum EndUserType {
+    DAIRY_FARMER
+    POULTRY_FARMER
+    FISH_FARMER
+    AGRICULTURE_FARMER
+}
+
+enum AdminUserType {
+    SERVICE_PROVIDER
+    TRADER_CHEMIST
+}
+
+enum PoultryFarmType {
+    LAYER
+    BROILER
+}
+
+// Base User model
+model User {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    authType    AuthType
+    mobileNumber String? @unique
+    email       String?  @unique
+    password    String?  // Only for super admin
+    isVerified  Boolean  @default(false)
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    
+    // Relations
+    endUserProfile   EndUserProfile?
+    adminUserProfile AdminUserProfile?
+    
+    // OTP related
+    otps        OTP[]
+    
+    @@map("users")
+}
+
+// OTP model for authentication
+model OTP {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String   @db.ObjectId
+    code      String
+    expiresAt DateTime
+    isUsed    Boolean  @default(false)
+    createdAt DateTime @default(now())
+    
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@map("otps")
+}
+
+// OTP Tracking model for tracking sent OTP messages
+model OtpTracking {
+    id              String   @id @default(auto()) @map("_id") @db.ObjectId
+    companyName     String   @default("ADI")
+    recipientNumber String
+    message         String
+    messageType     String   @default("OTP")
+    status          String   // SUCCESS, FAILED, PENDING
+    provider        String   @default("MIMSMS")
+    cost            Float?   // Cost per SMS if available
+    errorMessage    String?  // Error details if failed
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+    
+    @@map("otp_tracking")
+}
+
+// End User Profile (Normal Users)
+model EndUserProfile {
+    id          String      @id @default(auto()) @map("_id") @db.ObjectId
+    userId      String      @unique @db.ObjectId
+    userType    EndUserType
+    
+    // Personal Information (common for all end users)
+    name        String
+    address     String
+    
+    // Farm specific data (stored as flexible JSON)
+    farmData    Json
+    
+    user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@map("end_user_profiles")
+}
+
+// Admin User Profile
+model AdminUserProfile {
+    id          String        @id @default(auto()) @map("_id") @db.ObjectId
+    userId      String        @unique @db.ObjectId
+    userType    AdminUserType
+    
+    // Personal Information
+    name        String
+    address     String
+    photo       String?
+    
+    // Educational Qualification
+    lastDegree  String
+    areaOfExpertise String
+    serviceExperience Int // in years
+    jobPosition String?     // Only for service provider
+    
+    user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@map("admin_user_profiles")
+}
