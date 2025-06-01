@@ -6,40 +6,44 @@ frontendURL: http://localhost:3000
 mongoURL: mongodb://localhost:27017/corpactive
 port: 4000
 
-translationUrl: ''
+translationUrl: ""
 
 redis:
-    host: localhost
-    port: 6900
-    password: ''
+  host: localhost
+  port: 6900
+  password: ""
 
 email:
-    mailSendFrom: no-reply@getonnet.dev
-    emailQueueName: emailQueue
+  mailSendFrom: no-reply@getonnet.dev
+  emailQueueName: emailQueue
 
 auth:
-    jwtSecret: secret@!@@~
-    accessTokenExpiresIn: '1h'
-    refreshTokenExpiresIn: '1y'
+  jwtSecret: secret@!@@~
+  accessTokenExpiresIn: "1h"
+  refreshTokenExpiresIn: "1y"
 
 s3:
-    accessKey: test
-    secretKey: test
-    bucketId: test
-    domainName: test
-    region: test
+  accessKey: test
+  secretKey: test
+  bucketId: test
+  domainName: test
+  region: test
 
 ses:
-    region: test
-    accessKeyId: test
-    secretAccessKey: test
+  region: test
+  accessKeyId: test
+  secretAccessKey: test
 
 adminCredential:
-    email: test@test.com
-    password: test
+  email: test@test.com
+  password: test
+
+superAdmin:
+  email: admin@portal.com
+  password: SuperAdmin123!
 
 firebase:
-    privateKey: test
-    clientEmail: test
-    projectId: test
-    packageName: test
+  privateKey: test
+  clientEmail: test
+  projectId: test
+  packageName: test

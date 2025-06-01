@@ -1,6 +1,10 @@
 import { tags } from "typia";
-import { AuthType, EndUserType, AdminUserType } from "./create-user.dto";
+import { EndUserType, AdminUserType } from "@prisma/client";
 
+export enum AuthType {
+    END_USER = "END_USER",
+    ADMIN = "ADMIN"
+}
 // Super Admin Login DTO
 export interface SuperAdminLoginDto {
     email: string & tags.Format<"email">;
@@ -9,38 +13,48 @@ export interface SuperAdminLoginDto {
 
 // Simple Login DTO - just takes mobile number and auth type
 export interface LoginDto {
-    mobileNumber: string & tags.Pattern<"^[0-9+\\-\\s()]+$">;
+    mobileNumber: string;
     authType: AuthType.END_USER | AuthType.ADMIN;
 }
 
 // Simple OTP Verification DTO
 export interface VerifyOtpDto {
-    mobileNumber: string & tags.Pattern<"^[0-9+\\-\\s()]+$">;
-    otp: string & tags.Pattern<"^[0-9]{4,6}$">;
+    mobileNumber: string;
+    otp: string;
 }
 
-// Resend OTP DTO
-export interface ResendOtpDto {
-    mobileNumber: string & tags.Pattern<"^[0-9+\\-\\s()]+$">;
+// Send OTP DTO
+export interface SendOtpDto {
+    mobileNumber: string;
+}
+
+// Refresh Token DTO
+export interface RefreshTokenDto {
+    refreshToken: string;
+}
+
+// Logout DTO
+export interface LogoutDto {
+    refreshToken: string;
 }
 
 // Legacy DTOs (keeping for backward compatibility if needed)
 export interface OTPLoginDto {
     authType: AuthType.END_USER | AuthType.ADMIN;
     userType: EndUserType | AdminUserType;
-    mobileNumber: string & tags.Pattern<"^[0-9+\\-\\s()]+$">;
-    otp: string & tags.Pattern<"^[0-9]{4,6}$">;
+    mobileNumber: string;
+    otp: string;
 }
 
 export interface SendOTPDto {
     authType: AuthType.END_USER | AuthType.ADMIN;
     userType: EndUserType | AdminUserType;
-    mobileNumber: string & tags.Pattern<"^[0-9+\\-\\s()]+$">;
+    mobileNumber: string;
 }
 
 export interface VerifyOTPDto {
     authType: AuthType.END_USER | AuthType.ADMIN;
     userType: EndUserType | AdminUserType;
-    mobileNumber: string & tags.Pattern<"^[0-9+\\-\\s()]+$">;
-    otp: string & tags.Pattern<"^[0-9]{4,6}$">;
+    mobileNumber: string;
+    otp: string;
 } 

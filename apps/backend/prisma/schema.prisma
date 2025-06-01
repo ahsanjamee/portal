@@ -42,7 +42,7 @@ model User {
     mobileNumber String? @unique
     email       String?  @unique
     password    String?  // Only for super admin
-    isVerified  Boolean  @default(false)
+    isVerified  Boolean?  @default(false)
     isActive    Boolean  @default(true)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
@@ -54,21 +54,18 @@ model User {
     // OTP related
     otps        OTP[]
     
+    // JWT refresh tokens
+    refreshTokens RefreshToken[]
+    
     @@map("users")
 }
 
-// OTP model for authentication
-model OTP {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    userId    String   @db.ObjectId
-    code      String
-    expiresAt DateTime
-    isUsed    Boolean  @default(false)
+model VerifiedMobileNumber {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    mobileNumber String @unique
+    isVerified Boolean @default(false)
     createdAt DateTime @default(now())
-    
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    
-    @@map("otps")
+    updatedAt DateTime @updatedAt
 }
 
 // OTP Tracking model for tracking sent OTP messages
@@ -86,6 +83,50 @@ model OtpTracking {
     updatedAt       DateTime @updatedAt
     
     @@map("otp_tracking")
+}
+
+// Refresh Token model for JWT authentication
+model RefreshToken {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String   @db.ObjectId
+    token     String   @unique
+    expiresAt DateTime
+    isValid   Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@map("refresh_tokens")
+}
+
+// Optional: Token Blacklist for immediate access token revocation
+// Uncomment if you need immediate token revocation
+// model TokenBlacklist {
+//     id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//     token     String   @unique // JWT ID (jti) or full token hash
+//     userId    String   @db.ObjectId
+//     expiresAt DateTime
+//     reason    String?  // "logout", "security_breach", etc.
+//     createdAt DateTime @default(now())
+//     
+//     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//     
+//     @@map("token_blacklist")
+// }
+
+// OTP model for authentication
+model OTP {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String   @db.ObjectId
+    code      String
+    expiresAt DateTime
+    isUsed    Boolean  @default(false)
+    createdAt DateTime @default(now())
+    
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    
+    @@map("otps")
 }
 
 // End User Profile (Normal Users)

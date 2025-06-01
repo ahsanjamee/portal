@@ -7,10 +7,14 @@ import { ConfigModule } from './config/config.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { SmsModule } from './libs/sms/sms.module';
+import { AuthModule } from './libs/auth/auth.module';
+import { JwtAuthGuard } from './libs/auth/jwt.guard';
+
 @Module({
     imports: [
         ConfigModule,
         PrismaModule,
+        AuthModule,
         ScheduleModule.forRoot(),
         ThrottlerModule.forRoot([
             {
@@ -27,6 +31,10 @@ import { SmsModule } from './libs/sms/sms.module';
         {
             provide: APP_GUARD,
             useClass: ThrottlerGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard,
         },
     ],
     controllers: [],

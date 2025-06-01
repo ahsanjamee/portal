@@ -35,6 +35,11 @@ export const ConfigZod = z.object({
         password: z.string(),
     }),
 
+    superAdmin: z.object({
+        email: z.string().email().default('admin@portal.com'),
+        password: z.string().default('SuperAdmin123!'),
+    }),
+
     sms: z.object({
         apiUrl: z.string().default('https://api.mimsms.com/api/SmsSending/SMS'),
         username: z.string().email(),

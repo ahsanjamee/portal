@@ -1,21 +1,21 @@
 import { Injectable, BadRequestException, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SmsService } from '../libs/sms/sms.service';
+import { JwtAuthService } from '../libs/auth/jwt.service';
 import * as bcrypt from 'bcrypt';
 import {
     CreateEndUserDto,
     CreateAdminUserDto,
-    AuthType,
-    EndUserType,
-    AdminUserType
 } from './dto/create-user.dto';
-import { SuperAdminLoginDto, LoginDto, VerifyOtpDto, ResendOtpDto } from './dto/login.dto';
-
+import { SuperAdminLoginDto, LoginDto, VerifyOtpDto, SendOtpDto } from './dto/login.dto';
+import { AuthType } from '@prisma/client';
+import { AuthType as AuthTypeDto } from './dto/login.dto';
 @Injectable()
 export class UserService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly smsService: SmsService
+        private readonly smsService: SmsService,
+        private readonly jwtAuthService: JwtAuthService
     ) { }
 
     // Verify password for super admin
@@ -25,13 +25,13 @@ export class UserService {
 
     // Register End User (Farmers) and send OTP
     async registerEndUser(createEndUserDto: CreateEndUserDto) {
-        // Check if mobile number already exists
-        const existingUser = await this.prisma.user.findUnique({
+
+        const isVerified = await this.prisma.verifiedMobileNumber.findUnique({
             where: { mobileNumber: createEndUserDto.mobileNumber }
         });
 
-        if (existingUser) {
-            throw new ConflictException('Mobile number already registered');
+        if (!isVerified) {
+            throw new BadRequestException('Mobile number not verified');
         }
 
         // Create user and profile in transaction
@@ -40,6 +40,7 @@ export class UserService {
                 data: {
                     authType: AuthType.END_USER,
                     mobileNumber: createEndUserDto.mobileNumber,
+                    isVerified: true,
                 }
             });
 
@@ -56,43 +57,33 @@ export class UserService {
             return { user, profile };
         });
 
-        // Send OTP after successful registration
-        try {
-            if (createEndUserDto.mobileNumber) {
-                await this.smsService.sendOtp(createEndUserDto.mobileNumber);
-            }
-        } catch (error) {
-            console.error('Failed to send OTP during registration:', error);
-            // Continue even if SMS fails
-        }
+        // Generate JWT tokens
+        const tokens = await this.jwtAuthService.generateTokens({
+            sub: result.user.id,
+            email: result.user.email || undefined,
+            mobileNumber: result.user.mobileNumber || undefined,
+            authType: result.user.authType as AuthTypeDto,
+        });
 
         return {
             id: result.user.id,
             authType: result.user.authType,
             mobileNumber: result.user.mobileNumber,
             profile: result.profile,
-            message: 'User registered successfully. OTP sent to mobile number.'
+            message: 'Registration successful.',
+            ...tokens
         };
     }
 
     // Register Admin User (Service Provider, Trader/Chemist) and send OTP
     async registerAdminUser(createAdminUserDto: CreateAdminUserDto) {
-        // Check if mobile number already exists
-        const existingUser = await this.prisma.user.findUnique({
+
+        const isVerified = await this.prisma.verifiedMobileNumber.findUnique({
             where: { mobileNumber: createAdminUserDto.mobileNumber }
         });
 
-        if (existingUser) {
-            throw new ConflictException('Mobile number already registered');
-        }
-
-        // Check if email already exists
-        const existingEmail = await this.prisma.user.findUnique({
-            where: { email: createAdminUserDto.email }
-        });
-
-        if (existingEmail) {
-            throw new ConflictException('Email already registered');
+        if (!isVerified) {
+            throw new BadRequestException('Mobile number not verified');
         }
 
         // Create user and profile in transaction
@@ -101,7 +92,6 @@ export class UserService {
                 data: {
                     authType: AuthType.ADMIN,
                     mobileNumber: createAdminUserDto.mobileNumber,
-                    email: createAdminUserDto.email,
                 }
             });
 
@@ -122,37 +112,33 @@ export class UserService {
             return { user, profile };
         });
 
-        // Send OTP after successful registration
-        try {
-            if (createAdminUserDto.mobileNumber) {
-                await this.smsService.sendOtp(createAdminUserDto.mobileNumber);
-            }
-        } catch (error) {
-            console.error('Failed to send OTP during registration:', error);
-            // Continue even if SMS fails
-        }
+        // Generate JWT tokens
+        const tokens = await this.jwtAuthService.generateTokens({
+            sub: result.user.id,
+            email: result.user.email || undefined,
+            mobileNumber: result.user.mobileNumber || undefined,
+            authType: result.user.authType as AuthTypeDto,
+        });
 
         return {
             id: result.user.id,
             authType: result.user.authType,
             mobileNumber: result.user.mobileNumber,
             profile: result.profile,
-            message: 'Admin user registered successfully. OTP sent to mobile number.'
+            message: 'Admin user registered successfully.',
+            ...tokens
         };
     }
 
     // Login function - sends OTP to mobile number based on auth type
     async login(loginDto: LoginDto) {
+
         // Check if user exists with the mobile number and auth type
         const user = await this.prisma.user.findFirst({
             where: {
                 mobileNumber: loginDto.mobileNumber,
                 authType: loginDto.authType
             },
-            include: {
-                endUserProfile: true,
-                adminUserProfile: true
-            }
         });
 
         if (!user) {
@@ -183,33 +169,91 @@ export class UserService {
             throw new UnauthorizedException('Invalid or expired OTP');
         }
 
-        // Find user
-        const user = await this.prisma.user.findUnique({
-            where: { mobileNumber: verifyOtpDto.mobileNumber },
-            include: {
-                endUserProfile: true,
-                adminUserProfile: true
-            }
+        // First find user to get their auth type
+        const userBasic = await this.prisma.user.findUnique({
+            where: { mobileNumber: verifyOtpDto.mobileNumber }
         });
 
-        if (!user) {
+        if (!userBasic) {
             throw new UnauthorizedException('User not found');
         }
 
-        // Mark user as verified
-        await this.prisma.user.update({
-            where: { id: user.id },
-            data: { isVerified: true }
+        // Build include object based on auth type
+        const includeProfile = {
+            endUserProfile: userBasic.authType === AuthType.END_USER,
+            adminUserProfile: userBasic.authType === AuthType.ADMIN
+        };
+
+        // Get user with appropriate profile
+        const user = await this.prisma.user.findUnique({
+            where: { mobileNumber: verifyOtpDto.mobileNumber },
+            include: includeProfile
+        });
+
+
+        // Generate JWT tokens
+        const tokens = await this.jwtAuthService.generateTokens({
+            sub: user!.id,
+            email: user!.email || undefined,
+            mobileNumber: user!.mobileNumber || undefined,
+            authType: user!.authType as AuthTypeDto,
         });
 
         return {
-            id: user.id,
-            authType: user.authType,
-            mobileNumber: user.mobileNumber,
-            email: user.email,
+            id: user!.id,
+            authType: user!.authType,
+            mobileNumber: user!.mobileNumber,
             isVerified: true,
-            profile: user.endUserProfile || user.adminUserProfile,
-            message: 'OTP verified successfully'
+            profile: user!.endUserProfile || user!.adminUserProfile,
+            message: 'OTP verified successfully',
+            ...tokens
+        };
+    }
+
+    // Verify mobile number for registration - checks OTP and updates phoneVerified status
+    async verifyMobileForRegistration(verifyOtpDto: VerifyOtpDto) {
+        // Find user by mobile number
+        const user = await this.prisma.user.findUnique({
+            where: { mobileNumber: verifyOtpDto.mobileNumber }
+        });
+
+        if (user) {
+            throw new BadRequestException('User already exists with the provided mobile number');
+        }
+
+        const alreadyVerified = await this.prisma.verifiedMobileNumber.findUnique({
+            where: { mobileNumber: verifyOtpDto.mobileNumber }
+        });
+
+        if (alreadyVerified) {
+            return {
+                success: true,
+                message: 'Mobile number is already verified',
+                phoneVerified: true,
+                mobileNumber: verifyOtpDto.mobileNumber
+            };
+        }
+
+        // Verify OTP using SMS service
+        const isValidOtp = this.smsService.verifyOtp(verifyOtpDto.mobileNumber, verifyOtpDto.otp);
+
+        if (!isValidOtp) {
+            throw new UnauthorizedException('Invalid or expired OTP');
+        }
+
+        // Update phoneVerified status
+        await this.prisma.verifiedMobileNumber.create({
+            data: {
+                mobileNumber: verifyOtpDto.mobileNumber,
+                isVerified: true
+            }
+        });
+
+        return {
+            success: true,
+            message: 'Mobile number verified successfully',
+            phoneVerified: true,
+            mobileNumber: verifyOtpDto.mobileNumber
         };
     }
 
@@ -232,36 +276,54 @@ export class UserService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
+        // Generate JWT tokens
+        const tokens = await this.jwtAuthService.generateTokens({
+            sub: user.id,
+            email: user.email || undefined,
+            mobileNumber: user.mobileNumber || undefined,
+            authType: user.authType as AuthTypeDto,
+        });
+
         return {
             id: user.id,
             authType: user.authType,
             email: user.email,
-            isVerified: user.isVerified
+            isVerified: user.isVerified,
+            ...tokens
         };
     }
 
     // Get user by ID
     async findById(id: string) {
-        const user = await this.prisma.user.findUnique({
-            where: { id },
-            include: {
-                endUserProfile: true,
-                adminUserProfile: true
-            }
+        // First get basic user info to determine auth type
+        const userBasic = await this.prisma.user.findUnique({
+            where: { id }
         });
 
-        if (!user) {
+        if (!userBasic) {
             throw new BadRequestException('User not found');
         }
 
+        // Build include object based on auth type
+        const includeProfile = {
+            endUserProfile: userBasic.authType === AuthType.END_USER,
+            adminUserProfile: userBasic.authType === AuthType.ADMIN
+        };
+
+        // Get user with appropriate profile
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+            include: includeProfile
+        });
+
         return {
-            id: user.id,
-            authType: user.authType,
-            mobileNumber: user.mobileNumber,
-            email: user.email,
-            isVerified: user.isVerified,
-            isActive: user.isActive,
-            profile: user.endUserProfile || user.adminUserProfile
+            id: user!.id,
+            authType: user!.authType,
+            mobileNumber: user!.mobileNumber,
+            email: user!.email,
+            isVerified: user!.isVerified,
+            isActive: user!.isActive,
+            profile: user!.endUserProfile || user!.adminUserProfile
         };
     }
 
@@ -285,27 +347,23 @@ export class UserService {
     }
 
     // Resend OTP
-    async resendOtp(resendOtpDto: ResendOtpDto) {
-        // Check if user exists
-        const user = await this.prisma.user.findUnique({
-            where: { mobileNumber: resendOtpDto.mobileNumber }
-        });
+    async sendOtp(sendOtpDto: SendOtpDto) {
 
-        if (!user) {
-            throw new BadRequestException('User not found');
+        if (!sendOtpDto.mobileNumber) {
+            throw new BadRequestException('Mobile number is required');
         }
 
         // Send OTP
         try {
-            await this.smsService.sendOtp(resendOtpDto.mobileNumber);
+            await this.smsService.sendOtp(sendOtpDto.mobileNumber);
         } catch (error) {
-            console.error('Failed to resend OTP:', error);
+            console.error('Failed to send OTP:', error);
             throw new BadRequestException('Failed to send OTP. Please try again.');
         }
 
         return {
             message: 'OTP sent successfully',
-            mobileNumber: resendOtpDto.mobileNumber
+            mobileNumber: sendOtpDto.mobileNumber
         };
     }
 } 

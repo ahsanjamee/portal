@@ -23,6 +23,7 @@
         "prisma:format": "prisma format",
         "prisma:generate": "prisma generate",
         "prisma:watch": "prisma generate --watch",
+        "db:seed": "tsx prisma/seed.ts",
         "swagger": "nestia swagger",
         "env:gen": "tsx ./src/config/config.service.ts --generate"
     },
@@ -133,5 +134,8 @@
         ],
         "coverageDirectory": "../coverage",
         "testEnvironment": "node"
+    },
+    "prisma": {
+        "seed": "tsx prisma/seed.ts"
     }
 }

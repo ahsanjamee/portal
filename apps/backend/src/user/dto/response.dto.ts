@@ -1,5 +1,5 @@
 import { tags } from "typia";
-import { AuthType, EndUserType, AdminUserType } from "./create-user.dto";
+import { AuthType, EndUserType, AdminUserType } from "@prisma/client";
 
 // Base user response
 export interface UserResponseDto {
