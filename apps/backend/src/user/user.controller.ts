@@ -105,7 +105,7 @@ export class UserController {
      * @summary Login for super admin using email and password
      */
     @Public()
-    @TypedRoute.Post('auth/super-admin-login')
+    @TypedRoute.Post('auth/super-admin/login')
     async loginSuperAdmin(@TypedBody() superAdminLoginDto: SuperAdminLoginDto) {
         return this.userService.loginSuperAdmin(superAdminLoginDto);
     }
@@ -117,26 +117,5 @@ export class UserController {
     @TypedRoute.Get(':id')
     async getUserById(@TypedParam('id') id: string) {
         return this.userService.findById(id);
-    }
-
-    /**
-     * Get All Users
-     * @summary Get all users (admin endpoint)
-     */
-    @TypedRoute.Get()
-    async getAllUsers() {
-        return this.userService.findAll();
-    }
-
-    /**
-     * Update User Status
-     * @summary Activate or deactivate a user
-     */
-    @TypedRoute.Patch(':id/status')
-    async updateUserStatus(
-        @TypedParam('id') id: string,
-        @TypedBody() body: { isActive: boolean }
-    ) {
-        return this.userService.updateUserStatus(id, body.isActive);
     }
 } 

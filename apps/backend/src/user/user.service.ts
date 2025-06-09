@@ -327,25 +327,6 @@ export class UserService {
         };
     }
 
-    // Get all users (for admin purposes)
-    async findAll() {
-        return this.prisma.user.findMany({
-            include: {
-                endUserProfile: true,
-                adminUserProfile: true
-            },
-            orderBy: { createdAt: 'desc' }
-        });
-    }
-
-    // Update user status
-    async updateUserStatus(id: string, isActive: boolean) {
-        return this.prisma.user.update({
-            where: { id },
-            data: { isActive }
-        });
-    }
-
     // Resend OTP
     async sendOtp(sendOtpDto: SendOtpDto) {
 

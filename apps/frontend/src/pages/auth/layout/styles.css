@@ -1,0 +1,21 @@
+@media only screen and (max-width: 450px) {
+	.authlayout-content {
+		width: 390px;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.authlayout-content {
+		width: 340px;
+	}
+}
+@media only screen and (max-width: 350px) {
+	.authlayout-content {
+		width: 290px;
+	}
+}
+@media only screen and (max-width: 300px) {
+	.authlayout-content {
+		width: 260px;
+	}
+}

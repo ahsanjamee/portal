@@ -1,0 +1,1458 @@
+{
+  "openapi": "3.1.0",
+  "servers": [],
+  "info": {
+    "version": "0.0.1",
+    "title": "@portal/backend",
+    "description": "test",
+    "license": {
+      "name": "UNLICENSED"
+    }
+  },
+  "paths": {
+    "/user/register/end-user": {
+      "post": {
+        "summary": "Register a new end user (dairy, poultry, fish, or agriculture farmer) and send OTP",
+        "description": "Register End User (Farmers)",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEndUserDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "number"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "authType": {
+                      "oneOf": [
+                        {
+                          "const": "END_USER"
+                        },
+                        {
+                          "const": "ADMIN"
+                        },
+                        {
+                          "const": "SUPER_ADMIN"
+                        }
+                      ]
+                    },
+                    "mobileNumber": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "profile": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "userId": {
+                          "type": "string"
+                        },
+                        "userType": {
+                          "oneOf": [
+                            {
+                              "const": "DAIRY_FARMER"
+                            },
+                            {
+                              "const": "POULTRY_FARMER"
+                            },
+                            {
+                              "const": "FISH_FARMER"
+                            },
+                            {
+                              "const": "AGRICULTURE_FARMER"
+                            }
+                          ]
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "farmData": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "$ref": "#/components/schemas/JsonArray"
+                            },
+                            {
+                              "$ref": "#/components/schemas/JsonObject"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "id",
+                        "userId",
+                        "userType",
+                        "address",
+                        "farmData"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "expiresIn",
+                    "id",
+                    "authType",
+                    "mobileNumber",
+                    "profile",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "user",
+          "register",
+          "end_user",
+          "registerEndUser"
+        ],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/register/admin": {
+      "post": {
+        "summary": "Register a new admin user (service provider or trader/chemist) and send OTP",
+        "description": "Register Admin User",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminUserDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "number"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "authType": {
+                      "oneOf": [
+                        {
+                          "const": "END_USER"
+                        },
+                        {
+                          "const": "ADMIN"
+                        },
+                        {
+                          "const": "SUPER_ADMIN"
+                        }
+                      ]
+                    },
+                    "mobileNumber": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "profile": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "userId": {
+                          "type": "string"
+                        },
+                        "userType": {
+                          "oneOf": [
+                            {
+                              "const": "SERVICE_PROVIDER"
+                            },
+                            {
+                              "const": "TRADER_CHEMIST"
+                            }
+                          ]
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "photo": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "lastDegree": {
+                          "type": "string"
+                        },
+                        "areaOfExpertise": {
+                          "type": "string"
+                        },
+                        "serviceExperience": {
+                          "type": "number"
+                        },
+                        "jobPosition": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "id",
+                        "userId",
+                        "userType",
+                        "address",
+                        "photo",
+                        "lastDegree",
+                        "areaOfExpertise",
+                        "serviceExperience",
+                        "jobPosition"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "expiresIn",
+                    "id",
+                    "authType",
+                    "mobileNumber",
+                    "profile",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "user",
+          "register",
+          "admin",
+          "registerAdminUser"
+        ],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/login": {
+      "post": {
+        "summary": "Login with mobile number and auth type - sends OTP",
+        "description": "Login",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "mobileNumber": {
+                      "type": "string"
+                    },
+                    "authType": {
+                      "oneOf": [
+                        {
+                          "const": "END_USER"
+                        },
+                        {
+                          "const": "ADMIN"
+                        }
+                      ]
+                    }
+                  },
+                  "required": ["message", "mobileNumber", "authType"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["user", "auth", "login"],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/verify-otp": {
+      "post": {
+        "summary": "Verify OTP for authentication and get JWT tokens",
+        "description": "Verify OTP",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyOtpDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "number"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "authType": {
+                      "oneOf": [
+                        {
+                          "const": "END_USER"
+                        },
+                        {
+                          "const": "ADMIN"
+                        },
+                        {
+                          "const": "SUPER_ADMIN"
+                        }
+                      ]
+                    },
+                    "mobileNumber": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "isVerified": {
+                      "type": "boolean"
+                    },
+                    "profile": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": "string"
+                            },
+                            "userType": {
+                              "oneOf": [
+                                {
+                                  "const": "DAIRY_FARMER"
+                                },
+                                {
+                                  "const": "POULTRY_FARMER"
+                                },
+                                {
+                                  "const": "FISH_FARMER"
+                                },
+                                {
+                                  "const": "AGRICULTURE_FARMER"
+                                }
+                              ]
+                            },
+                            "address": {
+                              "type": "string"
+                            },
+                            "farmData": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "$ref": "#/components/schemas/JsonArray"
+                                },
+                                {
+                                  "$ref": "#/components/schemas/JsonObject"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "id",
+                            "userId",
+                            "userType",
+                            "address",
+                            "farmData"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": "string"
+                            },
+                            "userType": {
+                              "oneOf": [
+                                {
+                                  "const": "SERVICE_PROVIDER"
+                                },
+                                {
+                                  "const": "TRADER_CHEMIST"
+                                }
+                              ]
+                            },
+                            "address": {
+                              "type": "string"
+                            },
+                            "photo": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            "lastDegree": {
+                              "type": "string"
+                            },
+                            "areaOfExpertise": {
+                              "type": "string"
+                            },
+                            "serviceExperience": {
+                              "type": "number"
+                            },
+                            "jobPosition": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "id",
+                            "userId",
+                            "userType",
+                            "address",
+                            "photo",
+                            "lastDegree",
+                            "areaOfExpertise",
+                            "serviceExperience",
+                            "jobPosition"
+                          ]
+                        }
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "expiresIn",
+                    "id",
+                    "authType",
+                    "mobileNumber",
+                    "isVerified",
+                    "profile",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["user", "auth", "verify_otp", "verifyOtp"],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/verify-mobile-registration": {
+      "post": {
+        "summary": "Verify mobile number during registration process using OTP",
+        "description": "Verify Mobile for Registration",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyOtpDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "phoneVerified": {
+                      "type": "boolean"
+                    },
+                    "mobileNumber": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "phoneVerified",
+                    "mobileNumber"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "user",
+          "auth",
+          "verify_mobile_registration",
+          "verifyMobileForRegistration"
+        ],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/send-otp": {
+      "post": {
+        "summary": "Resend OTP to mobile number",
+        "description": "Resend OTP",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendOtpDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "mobileNumber": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message", "mobileNumber"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["user", "auth", "send_otp", "sendOtp"],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/refresh": {
+      "post": {
+        "summary": "Refresh access token using refresh token",
+        "description": "Refresh Token",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["user", "auth", "refresh", "refreshToken"],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/logout": {
+      "post": {
+        "summary": "Logout and invalidate refresh token",
+        "description": "Logout",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["user", "auth", "logout"],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/auth/super-admin-login": {
+      "post": {
+        "summary": "Login for super admin using email and password",
+        "description": "Super Admin Login",
+        "tags": ["User"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuperAdminLoginDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "refreshToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "number"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "authType": {
+                      "const": "SUPER_ADMIN"
+                    },
+                    "email": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "isVerified": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "accessToken",
+                    "refreshToken",
+                    "expiresIn",
+                    "id",
+                    "authType",
+                    "email",
+                    "isVerified"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "user",
+          "auth",
+          "super_admin_login",
+          "loginSuperAdmin"
+        ],
+        "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "summary": "Get user details by user ID",
+        "description": "Get User by ID",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "authType": {
+                      "oneOf": [
+                        {
+                          "const": "END_USER"
+                        },
+                        {
+                          "const": "ADMIN"
+                        },
+                        {
+                          "const": "SUPER_ADMIN"
+                        }
+                      ]
+                    },
+                    "mobileNumber": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "email": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "isVerified": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "isActive": {
+                      "type": "boolean"
+                    },
+                    "profile": {
+                      "oneOf": [
+                        {
+                          "type": "null"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": "string"
+                            },
+                            "userType": {
+                              "oneOf": [
+                                {
+                                  "const": "DAIRY_FARMER"
+                                },
+                                {
+                                  "const": "POULTRY_FARMER"
+                                },
+                                {
+                                  "const": "FISH_FARMER"
+                                },
+                                {
+                                  "const": "AGRICULTURE_FARMER"
+                                }
+                              ]
+                            },
+                            "address": {
+                              "type": "string"
+                            },
+                            "farmData": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "$ref": "#/components/schemas/JsonArray"
+                                },
+                                {
+                                  "$ref": "#/components/schemas/JsonObject"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "id",
+                            "userId",
+                            "userType",
+                            "address",
+                            "farmData"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": "string"
+                            },
+                            "userType": {
+                              "oneOf": [
+                                {
+                                  "const": "SERVICE_PROVIDER"
+                                },
+                                {
+                                  "const": "TRADER_CHEMIST"
+                                }
+                              ]
+                            },
+                            "address": {
+                              "type": "string"
+                            },
+                            "photo": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            "lastDegree": {
+                              "type": "string"
+                            },
+                            "areaOfExpertise": {
+                              "type": "string"
+                            },
+                            "serviceExperience": {
+                              "type": "number"
+                            },
+                            "jobPosition": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "id",
+                            "userId",
+                            "userType",
+                            "address",
+                            "photo",
+                            "lastDegree",
+                            "areaOfExpertise",
+                            "serviceExperience",
+                            "jobPosition"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "authType",
+                    "mobileNumber",
+                    "email",
+                    "isVerified",
+                    "isActive",
+                    "profile"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["user", "getUserById"],
+        "x-samchon-controller": "UserController"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JsonArray": {
+        "type": "array",
+        "items": {
+          "oneof": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "JsonObject": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "CreateEndUserDto": {
+        "type": "object",
+        "properties": {
+          "userType": {
+            "oneOf": [
+              {
+                "const": "DAIRY_FARMER"
+              },
+              {
+                "const": "POULTRY_FARMER"
+              },
+              {
+                "const": "FISH_FARMER"
+              },
+              {
+                "const": "AGRICULTURE_FARMER"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "farmData": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DairyFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/PoultryFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/FishFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/AgricultureFarmDataDto"
+              }
+            ]
+          },
+          "authType": {
+            "oneOf": [
+              {
+                "const": "END_USER"
+              },
+              {
+                "const": "ADMIN"
+              },
+              {
+                "const": "SUPER_ADMIN"
+              }
+            ]
+          },
+          "mobileNumber": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "userType",
+          "name",
+          "address",
+          "farmData",
+          "authType",
+          "mobileNumber"
+        ]
+      },
+      "DairyFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "totalCattlePopulation": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalMilkingCow": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalMilkProductionPerDay": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalCalf": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalFemaleCalf": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalMaleCalf": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "totalCattlePopulation",
+          "totalMilkingCow",
+          "totalMilkProductionPerDay",
+          "totalCalf",
+          "totalFemaleCalf",
+          "totalMaleCalf"
+        ]
+      },
+      "PoultryFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "farmType": {
+            "oneOf": [
+              {
+                "const": "LAYER"
+              },
+              {
+                "const": "BROILER"
+              }
+            ]
+          },
+          "totalBird": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalEggProductionPerDay": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": ["farmType", "totalBird", "totalEggProductionPerDay"]
+      },
+      "FishFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "totalPondAreaDecimal": {
+            "type": "number",
+            "minimum": 0
+          },
+          "fishType": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["totalPondAreaDecimal", "fishType"]
+      },
+      "AgricultureFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "totalAgricultureLandDecimal": {
+            "type": "number",
+            "minimum": 0
+          },
+          "typeOfAgriculture": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["totalAgricultureLandDecimal", "typeOfAgriculture"]
+      },
+      "CreateAdminUserDto": {
+        "type": "object",
+        "properties": {
+          "userType": {
+            "oneOf": [
+              {
+                "const": "SERVICE_PROVIDER"
+              },
+              {
+                "const": "TRADER_CHEMIST"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "photo": {
+            "type": "string"
+          },
+          "lastDegree": {
+            "type": "string",
+            "minLength": 1
+          },
+          "areaOfExpertise": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serviceExperience": {
+            "type": "number",
+            "minimum": 0
+          },
+          "jobPosition": {
+            "type": "string"
+          },
+          "authType": {
+            "oneOf": [
+              {
+                "const": "END_USER"
+              },
+              {
+                "const": "ADMIN"
+              },
+              {
+                "const": "SUPER_ADMIN"
+              }
+            ]
+          },
+          "mobileNumber": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "userType",
+          "name",
+          "address",
+          "lastDegree",
+          "areaOfExpertise",
+          "serviceExperience",
+          "authType",
+          "mobileNumber"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "mobileNumber": {
+            "type": "string"
+          },
+          "authType": {
+            "oneOf": [
+              {
+                "const": "END_USER"
+              },
+              {
+                "const": "ADMIN"
+              }
+            ]
+          }
+        },
+        "required": ["mobileNumber", "authType"]
+      },
+      "VerifyOtpDto": {
+        "type": "object",
+        "properties": {
+          "mobileNumber": {
+            "type": "string"
+          },
+          "otp": {
+            "type": "string"
+          }
+        },
+        "required": ["mobileNumber", "otp"]
+      },
+      "SendOtpDto": {
+        "type": "object",
+        "properties": {
+          "mobileNumber": {
+            "type": "string"
+          }
+        },
+        "required": ["mobileNumber"]
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "expiresIn": {
+            "type": "number"
+          }
+        },
+        "required": ["accessToken", "refreshToken", "expiresIn"]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": ["refreshToken"]
+      },
+      "LogoutDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": ["refreshToken"]
+      },
+      "SuperAdminLoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["email", "password"]
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "User"
+    }
+  ],
+  "x-samchon-emended": true
+}

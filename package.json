@@ -8,10 +8,14 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "dev:backend": "pnpm --filter backend dev",
-    "dev:frontend": "pnpm --filter frontend dev"
+    "dev:frontend": "pnpm --filter frontend dev",
+    "gen:api-client": "tsx ./scripts/api-client.ts",
+    "prisma:generate": "pnpm --filter backend prisma:generate"
   },
   "devDependencies": {
+    "@types/node": "^22.13.8",
     "prettier": "^3.5.3",
+    "tsx": "^4.19.3",
     "turbo": "^2.5.3",
     "typescript": "5.8.2"
   },
