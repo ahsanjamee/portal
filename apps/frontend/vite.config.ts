@@ -18,7 +18,7 @@ export default defineConfig({
         },
     },
     server: {
-        open: 'http://local.jameeportal.dev',
+        open: 'https://localhost:443',
         host: '0.0.0.0',
         port: 443,
         strictPort: true,

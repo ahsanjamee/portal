@@ -16,18 +16,30 @@ function App() {
     (s) => s.authType === "SUPER_ADMIN"
   );
 
-  const a = useGlobalStoreSelector((s) => s);
-  console.log(isSuperAdmin, pathname, a);
-
-  const isAdmin = useGlobalStoreSelector((s) => s.authType === "ADMIN_USER");
+  const isAdmin = useGlobalStoreSelector((s) => s.authType === "ADMIN");
+  const isEndUser = useGlobalStoreSelector((s) => s.authType === "END_USER");
 
   useEffect(() => {
     const hasRedirectUrl = getRedirectURL();
 
     if (!isLoggedIn) {
-      const navigateTo = hasRedirectUrl
-        ? `/login?redirect_url=${hasRedirectUrl}`
-        : "/login";
+      // Check if coming from admin or user paths
+      const isFromAdminOrUser =
+        pathname.startsWith("/admin") || pathname.startsWith("/user");
+
+      let navigateTo;
+      if (isFromAdminOrUser) {
+        // If coming from admin or user paths, go to /auth/login
+        navigateTo = hasRedirectUrl
+          ? `/auth/login?redirect_url=${hasRedirectUrl}`
+          : "/auth/login";
+      } else {
+        // Otherwise, go to /login
+        navigateTo = hasRedirectUrl
+          ? `/login?redirect_url=${hasRedirectUrl}`
+          : "/login";
+      }
+
       navigate(navigateTo);
       return;
     }
@@ -38,9 +50,15 @@ function App() {
       }
       return;
     } else if (isAdmin) {
-      if (pathname.startsWith("/admin")) {
+      if (!pathname.startsWith("/admin")) {
         navigate("/admin/profile");
       }
+      return;
+    } else if (isEndUser) {
+      if (!pathname.startsWith("/user")) {
+        navigate("/user/profile");
+      }
+      return;
     }
   }, [axios, isLoggedIn, isSuperAdmin, navigate, pathname, store]);
 

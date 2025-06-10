@@ -3,11 +3,11 @@ import { useGlobalStore } from "@/stores/global.store";
 import NiceModal from "@ebay/nice-modal-react";
 import { AppShell, Burger, Group, NavLink, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { UserIcon } from "@phosphor-icons/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PrimaryTopbar } from "./topbar/PrimaryTopbar";
+import { UserIcon } from "@phosphor-icons/react";
 
-export const AppLayoutForAdmin = () => {
+export const AppLayoutForUser = () => {
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
 
@@ -16,7 +16,7 @@ export const AppLayoutForAdmin = () => {
   const links = [
     {
       label: "Profile",
-      to: "/admin/profile",
+      to: "/user/profile",
       icon: <UserIcon size={20} weight="fill" color="#859992" />,
     },
   ];
@@ -72,7 +72,10 @@ export const AppLayoutForAdmin = () => {
               ml={"md"}
               bg={"#fff"}
               className="mt-[-1px] w-full pl-0 pt-5 py-2 px-4 cursor-pointer border-t-[1px] border-[#323232] border-opacity-10"
-              onClick={() => store.onLogout()}
+              onClick={() => {
+                store.onLogout();
+                navigate("/auth/login");
+              }}
             >
               <div className="flex items-center gap-2 bg-main-bg w-full p-2 rounded-lg">
                 <LogoutIcon />

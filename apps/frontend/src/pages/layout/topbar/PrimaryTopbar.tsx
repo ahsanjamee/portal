@@ -7,7 +7,10 @@ export const PrimaryTopbar = () => {
   const isSuperAdmin = user?.authType === "SUPER_ADMIN";
   return (
     <Group gap={"lg"} justify="space-between" className="w-full px-6">
-      <h1 className="text-2xl font-bold">ADI</h1>
+      <div className="flex items-center gap-2">
+        <img src="/logo.png" alt="ADI" className="w-8 h-8" />
+        <h1 className="text-2xl font-bold hidden lg:block">ADI</h1>
+      </div>
       <UserInfoCard
         name={isSuperAdmin ? "Super Admin" : user?.profile?.name || ""}
       />

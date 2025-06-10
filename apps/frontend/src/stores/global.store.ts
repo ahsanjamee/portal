@@ -1,18 +1,38 @@
 import { LoginResponse } from '@/lib/entities/login.entity';
 import { getStoreClass } from '@poly-state/core';
 import { createStoreSelector } from '@poly-state/react';
-import { CreateAdminUserDto, CreateEndUserDto } from '@portal/portal-api-client';
 import cookie from 'js-cookie';
 import { createContext, useContext } from 'react';
 
+export type AdminUserProfile = {
+    id: string;
+    name: string;
+    address: string;
+    photo?: string | null;
+    lastDegree: string;
+    areaOfExpertise: string;
+    serviceExperience: number;
+    jobPosition?: string | null;
+    userType: 'SERVICE_PROVIDER' | 'TRADER_CHEMIST';
+    userId: string;
+}
+
+export type EndUserProfile = {
+    id: string;
+    name: string;
+    address: string;
+    farmData: any;
+    userType: 'DAIRY_FARMER' | 'POULTRY_FARMER' | 'FISH_FARMER' | 'AGRICULTURE_FARMER';
+}
+
 export type GlobalStoreType = {
     authenticated: boolean;
-    profile: CreateEndUserDto | CreateAdminUserDto | null;
+    profile: EndUserProfile | AdminUserProfile | null;
     accessToken: string;
     refreshToken: string;
     language: 'en' | 'no';
     showOverly: boolean;
-    authType: 'END_USER' | 'SUPER_ADMIN' | 'ADMIN_USER' | null
+    authType: 'END_USER' | 'SUPER_ADMIN' | 'ADMIN' | null
 };
 
 export const globalStoreInitialState: GlobalStoreType = {
@@ -28,7 +48,8 @@ export const globalStoreInitialState: GlobalStoreType = {
 export type CookieStorage = {
     accessToken: string;
     refreshToken: string;
-    authType: 'END_USER' | 'SUPER_ADMIN' | 'ADMIN_USER' | null
+    authType: 'END_USER' | 'SUPER_ADMIN' | 'ADMIN' | null
+    profile: EndUserProfile | AdminUserProfile | null
 };
 
 export const getGlobalStoreCookie = () => {
@@ -91,7 +112,8 @@ export class GlobalStore extends getStoreClass<GlobalStoreType>() {
             return {
                 accessToken: res.accessToken,
                 refreshToken: res.refreshToken,
-                authType: res.authType
+                authType: res.authType,
+                profile: res.profile || null
             };
         });
     };

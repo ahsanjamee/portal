@@ -6,6 +6,7 @@ import ErrorBoundaryPage from "@/pages/404/ErrorBoundaryPage";
 import ErrorPage from "@/pages/404/ErrorPage";
 import { useGlobalStore, useGlobalStoreSelector } from "@/stores/global.store";
 import { setAxiosClient } from "@portal/portal-api-client";
+import axios from "axios";
 import {
   FC,
   PropsWithChildren,
@@ -39,7 +40,7 @@ const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
         store.setState((p) => ({ ...p, accessToken: token }));
         localStorage.setItem("accessToken", token);
       },
-      baseURL: import.meta.env.VITE_OUTLET_URL,
+      baseURL: import.meta.env.VITE_API_URL,
       normalizeArrayQuery: true,
     });
 
@@ -50,6 +51,17 @@ const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
   if (!isReady) {
     return <Loader />;
   }
+
+  return <>{children}</>;
+};
+
+const PublicRoutes: FC<PropsWithChildren> = ({ children }) => {
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    validateStatus: () => true,
+  });
+
+  setAxiosClient(instance);
 
   return <>{children}</>;
 };
@@ -108,6 +120,14 @@ const components = {
     name: "AppLayoutForAdminLazy",
   }),
 
+  AppLayoutForUserLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/layout/AppLayoutForUser").then((m) => ({
+        default: m.AppLayoutForUser,
+      })),
+    name: "AppLayoutForUserLazy",
+  }),
+
   AppLayoutForSuperAdminLazy: LazyFactory({
     factory: () =>
       import("@/pages/layout/AppLayoutForSuperAdmin").then((m) => ({
@@ -150,20 +170,40 @@ const components = {
     name: "ProfileSuperAdminIndexLazy",
   }),
 
-  CompanyIndexLazy: LazyFactory({
+  // Mobile Auth Components
+  AuthMobileLoginLazy: LazyFactory({
     factory: () =>
-      import("@/pages/company/CompanyIndex").then((m) => ({
-        default: m.CompanyIndex,
+      import("@/pages/auth/AuthMobileLogin").then((m) => ({
+        default: m.AuthMobileLoginPage,
       })),
-    name: "CompanyIndexLazy",
+    name: "AuthMobileLoginLazy",
+    dontAllowWhileloggedIn: true,
   }),
 
-  CompanyDetailsLazy: LazyFactory({
+  AuthRegisterLazy: LazyFactory({
     factory: () =>
-      import("@/pages/company/CompanyDetails").then((m) => ({
-        default: m.CompanyDetails,
+      import("@/pages/auth/AuthRegisterPage").then((m) => ({
+        default: m.AuthRegisterPage,
       })),
-    name: "CompanyDetailsLazy",
+    name: "AuthRegisterLazy",
+    dontAllowWhileloggedIn: true,
+  }),
+
+  // Profile Pages
+  UserProfileLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/users/profile/UserProfile").then((m) => ({
+        default: m.UserProfile,
+      })),
+    name: "UserProfileLazy",
+  }),
+
+  AdminProfileLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/users/admin/AdminProfile").then((m) => ({
+        default: m.AdminProfile,
+      })),
+    name: "AdminProfileLazy",
   }),
 };
 
@@ -186,6 +226,7 @@ export const Routes = () => {
               </ProtectedRoute>
             </ErrorBoundary>
           ),
+          // Admin Routes
           children: [
             {
               Component: components.AppLayoutForAdminLazy,
@@ -196,12 +237,37 @@ export const Routes = () => {
                 },
                 {
                   path: "/admin/profile",
-                  Component: components.ProfileAdminIndexLazy,
+                  Component: components.AdminProfileLazy,
                 },
               ],
             },
           ],
         },
+
+        // User Routes
+        {
+          path: "/",
+          element: (
+            <ErrorBoundary FallbackComponent={ErrorBoundaryPage}>
+              <ProtectedRoute>
+                <App />
+              </ProtectedRoute>
+            </ErrorBoundary>
+          ),
+          children: [
+            {
+              Component: components.AppLayoutForUserLazy,
+              children: [
+                {
+                  path: "/user/profile",
+                  Component: components.UserProfileLazy,
+                },
+              ],
+            },
+          ],
+        },
+
+        // Super Admin Routes
         {
           element: (
             <ProtectedRoute>
@@ -215,15 +281,6 @@ export const Routes = () => {
             },
 
             {
-              path: "/super-admin/company",
-              Component: components.CompanyIndexLazy,
-            },
-            {
-              path: "/super-admin/company/details/:id",
-              Component: components.CompanyDetailsLazy,
-            },
-
-            {
               path: "/super-admin/profile",
               Component: components.ProfileSuperAdminIndexLazy,
             },
@@ -234,11 +291,35 @@ export const Routes = () => {
 
     {
       path: "/login",
-      Component: components.AuthLoginLazy,
+      element: (
+        <PublicRoutes>
+          <components.AuthLoginLazy />
+        </PublicRoutes>
+      ),
     },
     {
       path: "/super-admin/login",
-      Component: components.AuthLoginLazy,
+      element: (
+        <PublicRoutes>
+          <components.AuthLoginLazy />
+        </PublicRoutes>
+      ),
+    },
+    {
+      path: "/auth/login",
+      element: (
+        <PublicRoutes>
+          <components.AuthMobileLoginLazy />
+        </PublicRoutes>
+      ),
+    },
+    {
+      path: "/auth/register",
+      element: (
+        <PublicRoutes>
+          <components.AuthRegisterLazy />
+        </PublicRoutes>
+      ),
     },
 
     {

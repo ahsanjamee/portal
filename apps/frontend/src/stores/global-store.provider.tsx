@@ -37,7 +37,7 @@ export const GlobalStoreProvider: FC<PropsWithChildren> = ({ children }) => {
         authenticated: true,
         accessToken: cookies.accessToken,
         refreshToken: cookies.refreshToken,
-        profile: null,
+        profile: cookies.profile,
         language: "en",
         showOverly: false,
         authType: cookies.authType,

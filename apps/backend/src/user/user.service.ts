@@ -41,6 +41,9 @@ export class UserService {
                     authType: AuthType.END_USER,
                     mobileNumber: createEndUserDto.mobileNumber,
                     isVerified: true,
+                    // TODO: remove this after testing
+                    email: createEndUserDto.mobileNumber
+
                 }
             });
 
@@ -92,6 +95,9 @@ export class UserService {
                 data: {
                     authType: AuthType.ADMIN,
                     mobileNumber: createAdminUserDto.mobileNumber,
+                    isVerified: true,
+                    // TODO: remove this after testing
+                    email: createAdminUserDto.mobileNumber
                 }
             });
 
@@ -111,6 +117,8 @@ export class UserService {
 
             return { user, profile };
         });
+
+        console.log("=======", result.user);
 
         // Generate JWT tokens
         const tokens = await this.jwtAuthService.generateTokens({
