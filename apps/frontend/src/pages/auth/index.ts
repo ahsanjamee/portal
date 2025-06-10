@@ -21,5 +21,5 @@ export { AuthLayout } from "./layout/AuthLayout";
 export * from "./login/types";
 
 // Profile Pages
-export { UserProfile } from "../users/profile/UserProfile";
-export { AdminProfile } from "../users/admin/AdminProfile"; 
+export { UserProfile } from "../profile/farmers/UserProfile";
+export { AdminProfile } from "../profile/admin/AdminProfile"; 

@@ -152,14 +152,6 @@ const components = {
     name: "UsersSuperAdminIndexLazy",
   }),
 
-  ProfileAdminIndexLazy: LazyFactory({
-    factory: () =>
-      import("@/pages/profile/admin/ProfileAdminIndex").then((m) => ({
-        default: m.ProfileAdminIndex,
-      })),
-    name: "ProfileAdminIndexLazy",
-  }),
-
   ProfileSuperAdminIndexLazy: LazyFactory({
     factory: () =>
       import("@/pages/profile/super-admin/ProfileSuperAdminIndex").then(
@@ -192,7 +184,7 @@ const components = {
   // Profile Pages
   UserProfileLazy: LazyFactory({
     factory: () =>
-      import("@/pages/users/profile/UserProfile").then((m) => ({
+      import("@/pages/profile/farmers/UserProfile").then((m) => ({
         default: m.UserProfile,
       })),
     name: "UserProfileLazy",
@@ -200,7 +192,7 @@ const components = {
 
   AdminProfileLazy: LazyFactory({
     factory: () =>
-      import("@/pages/users/admin/AdminProfile").then((m) => ({
+      import("@/pages/profile/admin/AdminProfile").then((m) => ({
         default: m.AdminProfile,
       })),
     name: "AdminProfileLazy",
