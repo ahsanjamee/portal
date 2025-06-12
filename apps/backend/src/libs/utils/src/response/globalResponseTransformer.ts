@@ -11,7 +11,7 @@ export class GlobalResponseTransformer<T> implements NestInterceptor<T, Response
 		return next.handle().pipe(
 			map((data) => ({
 				success: true,
-				data: data ? JSON.parse(data) : null,
+				data: data ?? null,
 				error: null,
 				message: null,
 			})),

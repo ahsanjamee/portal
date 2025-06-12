@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { AdminModule } from './admin/admin.module';
+import { SuperAdminModule } from './super-admin/super-admin.module';
 import { ConfigModule } from './config/config.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
@@ -22,7 +22,7 @@ import { JwtAuthGuard } from './libs/auth/jwt.guard';
                 limit: 7,
             },
         ]),
-        AdminModule,
+        SuperAdminModule,
         UserModule,
         SmsModule,
     ],

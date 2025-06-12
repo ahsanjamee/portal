@@ -3,7 +3,8 @@ import { useGlobalStore } from "@/stores/global.store";
 import NiceModal from "@ebay/nice-modal-react";
 import { AppShell, Burger, Group, NavLink, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { RiUserFill } from "react-icons/ri";
+import { UserCheckIcon, UsersIcon } from "@phosphor-icons/react";
+import { RiGroupFill, RiUserFill } from "react-icons/ri";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PrimaryTopbar } from "./topbar/PrimaryTopbar";
 
@@ -14,6 +15,17 @@ export const AppLayoutForSuperAdmin = () => {
   const location = useLocation();
 
   const links = [
+    {
+      label: "End Users",
+      to: "/super-admin/end-users",
+      icon: <UsersIcon size={20} />,
+    },
+    {
+      label: "Admin Users",
+      to: "/super-admin/admins",
+      icon: <UserCheckIcon size={20} />,
+    },
+    { label: "All Users", to: "/super-admin/users", icon: <RiGroupFill /> },
     { label: "Profile", to: "/super-admin/profile", icon: <RiUserFill /> },
   ];
 

@@ -1,4 +1,3 @@
-import { useTranslate } from '@/translations/provider';
 import { ActionIcon, Group, Tooltip } from '@mantine/core';
 import { ArrowLeft, ArrowRight, CaretUpDown } from '@phosphor-icons/react';
 import {
@@ -54,7 +53,6 @@ type IPaginatedTableProps = {
 };
 
 const PaginatedTable: React.FC<IPaginatedTableProps> = ({ data, error, columns, ...props }) => {
-    const t = useTranslate();
     const table = useMantineReactTable({
         columns,
         data: data ?? [],
@@ -77,7 +75,7 @@ const PaginatedTable: React.FC<IPaginatedTableProps> = ({ data, error, columns, 
             : undefined,
         renderTopToolbarCustomActions: () => (
             <Group>
-                <Tooltip label={t('Refresh Data')}>
+                <Tooltip label={('Refresh Data')}>
                     <ActionIcon variant="transparent" color="black" onClick={() => props.refetch?.()}>
                         <RiRefreshLine className="w-6 h-6 " />
                     </ActionIcon>

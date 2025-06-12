@@ -8,7 +8,7 @@ import type {
 /**
  * @description Super Admin Login
  * @summary Login for super admin using email and password
- * @link /user/auth/super-admin-login
+ * @link /user/auth/super-admin/login
  */
 export async function postUserAuthSuperAdminLogin(
   data: PostUserAuthSuperAdminLoginMutationRequest,
@@ -17,6 +17,6 @@ export async function postUserAuthSuperAdminLogin(
   const res = await client<
     PostUserAuthSuperAdminLoginMutationResponse,
     PostUserAuthSuperAdminLoginMutationRequest
-  >({ method: "post", url: `/user/auth/super-admin-login`, data, ...options });
+  >({ method: "post", url: `/user/auth/super-admin/login`, data, ...options });
   return res;
 }

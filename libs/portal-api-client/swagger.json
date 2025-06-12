@@ -10,6 +10,334 @@
     }
   },
   "paths": {
+    "/super-admin/end-users": {
+      "get": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoUserWithProfileResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["super_admin", "end_users", "getAllEndUsers"],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
+    "/super-admin/admins": {
+      "get": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoUserWithProfileResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["super_admin", "admins", "getAllAdmins"],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
+    "/super-admin/end-users/{id}/status": {
+      "patch": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "isActive": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["message", "userId", "isActive"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "super_admin",
+          "end_users",
+          "status",
+          "updateEndUserStatus"
+        ],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
+    "/super-admin/admins/{id}/status": {
+      "patch": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserStatusDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "isActive": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["message", "userId", "isActive"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "super_admin",
+          "admins",
+          "status",
+          "updateAdminStatus"
+        ],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
+    "/super-admin/end-users/{id}": {
+      "delete": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message", "userId"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["super_admin", "end_users", "deleteEndUser"],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
+    "/super-admin/admins/{id}": {
+      "delete": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message", "userId"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["super_admin", "admins", "deleteAdmin"],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
     "/user/register/end-user": {
       "post": {
         "summary": "Register a new end user (dairy, poultry, fish, or agriculture farmer) and send OTP",
@@ -758,7 +1086,7 @@
         "x-samchon-controller": "UserController"
       }
     },
-    "/user/auth/super-admin-login": {
+    "/user/auth/super-admin/login": {
       "post": {
         "summary": "Login for super admin using email and password",
         "description": "Super Admin Login",
@@ -835,7 +1163,8 @@
         "x-samchon-accessor": [
           "user",
           "auth",
-          "super_admin_login",
+          "super_admin",
+          "login",
           "loginSuperAdmin"
         ],
         "x-samchon-controller": "UserController"
@@ -1073,6 +1402,224 @@
   },
   "components": {
     "schemas": {
+      "PaginatedDtoUserWithProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserWithProfileResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": ["items", "pagination"]
+      },
+      "UserWithProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EndUserProfileResponseDto"
+              },
+              {
+                "$ref": "#/components/schemas/AdminUserProfileResponseDto"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "authType": {
+            "oneOf": [
+              {
+                "const": "END_USER"
+              },
+              {
+                "const": "ADMIN"
+              },
+              {
+                "const": "SUPER_ADMIN"
+              }
+            ]
+          },
+          "mobileNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "authType",
+          "isVerified",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "EndUserProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userType": {
+            "oneOf": [
+              {
+                "const": "DAIRY_FARMER"
+              },
+              {
+                "const": "POULTRY_FARMER"
+              },
+              {
+                "const": "FISH_FARMER"
+              },
+              {
+                "const": "AGRICULTURE_FARMER"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "farmData": {
+            "$ref": "#/components/schemas/object"
+          }
+        },
+        "required": ["id", "userType", "name", "address", "farmData"]
+      },
+      "object": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "AdminUserProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userType": {
+            "oneOf": [
+              {
+                "const": "SERVICE_PROVIDER"
+              },
+              {
+                "const": "TRADER_CHEMIST"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "lastDegree": {
+            "type": "string"
+          },
+          "areaOfExpertise": {
+            "type": "string"
+          },
+          "serviceExperience": {
+            "type": "number"
+          },
+          "jobPosition": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userType",
+          "name",
+          "address",
+          "lastDegree",
+          "areaOfExpertise",
+          "serviceExperience"
+        ]
+      },
+      "PaginationDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "current": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number"
+          },
+          "previous": {
+            "type": "number"
+          }
+        },
+        "required": ["total", "current", "next", "previous"]
+      },
+      "PaginationQueryDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1
+          },
+          "search": {
+            "type": "string"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sort": {
+            "oneOf": [
+              {
+                "const": "asc"
+              },
+              {
+                "const": "desc"
+              }
+            ]
+          }
+        },
+        "required": []
+      },
+      "UpdateUserStatusDto": {
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": ["isActive"]
+      },
       "JsonArray": {
         "type": "array",
         "items": {
@@ -1450,6 +1997,9 @@
     }
   },
   "tags": [
+    {
+      "name": "Super Admin"
+    },
     {
       "name": "User"
     }

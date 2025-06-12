@@ -162,6 +162,22 @@ const components = {
     name: "ProfileSuperAdminIndexLazy",
   }),
 
+  EndUsersPageLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/users/super-admin/EndUsersPage").then((m) => ({
+        default: m.EndUsersPage,
+      })),
+    name: "EndUsersPageLazy",
+  }),
+
+  AdminsPageLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/users/super-admin/AdminsPage").then((m) => ({
+        default: m.AdminsPage,
+      })),
+    name: "AdminsPageLazy",
+  }),
+
   // Mobile Auth Components
   AuthMobileLoginLazy: LazyFactory({
     factory: () =>
@@ -271,7 +287,14 @@ export const Routes = () => {
               path: "/super-admin/users",
               Component: components.UsersSuperAdminIndexLazy,
             },
-
+            {
+              path: "/super-admin/end-users",
+              Component: components.EndUsersPageLazy,
+            },
+            {
+              path: "/super-admin/admins",
+              Component: components.AdminsPageLazy,
+            },
             {
               path: "/super-admin/profile",
               Component: components.ProfileSuperAdminIndexLazy,

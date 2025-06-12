@@ -1,4 +1,28 @@
 export const operations = {
+  "get_super-admin-end-users": {
+    path: "/super-admin/end-users",
+    method: "get",
+  },
+  "get_super-admin-admins": {
+    path: "/super-admin/admins",
+    method: "get",
+  },
+  "patch_super-admin-end-users-id-status": {
+    path: "/super-admin/end-users/:id/status",
+    method: "patch",
+  },
+  "patch_super-admin-admins-id-status": {
+    path: "/super-admin/admins/:id/status",
+    method: "patch",
+  },
+  "delete_super-admin-end-users-id": {
+    path: "/super-admin/end-users/:id",
+    method: "delete",
+  },
+  "delete_super-admin-admins-id": {
+    path: "/super-admin/admins/:id",
+    method: "delete",
+  },
   "post_user-register-end-user": {
     path: "/user/register/end-user",
     method: "post",
@@ -32,7 +56,7 @@ export const operations = {
     method: "post",
   },
   "post_user-auth-super-admin-login": {
-    path: "/user/auth/super-admin-login",
+    path: "/user/auth/super-admin/login",
     method: "post",
   },
   "get_user-id": {
