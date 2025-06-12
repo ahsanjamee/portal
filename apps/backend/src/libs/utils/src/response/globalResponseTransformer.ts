@@ -9,12 +9,23 @@ export interface Response<T> {
 export class GlobalResponseTransformer<T> implements NestInterceptor<T, Response<T>> {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
 		return next.handle().pipe(
-			map((data) => ({
-				success: true,
-				data: data ?? null,
-				error: null,
-				message: null,
-			})),
+			map((data) => {
+				let parsedData: any;
+
+				try {
+					parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+				} catch (err) {
+					console.error('Failed to parse response data:', err);
+					parsedData = data; // fallback to raw data
+				}
+
+				return {
+					success: true,
+					data: parsedData,
+					error: null,
+					message: null,
+				};
+			}),
 		);
 	}
 }

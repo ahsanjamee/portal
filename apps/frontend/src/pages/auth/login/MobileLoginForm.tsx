@@ -101,11 +101,9 @@ export const MobileLoginForm = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="END_USER">
-                      End User (Farmer/Consumer)
-                    </SelectItem>
+                    <SelectItem value="END_USER">Farmer</SelectItem>
                     <SelectItem value="ADMIN">
-                      Admin (Service Provider/Trader/Chemist)
+                      Service Provider/Trader/Chemist
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -125,6 +123,18 @@ export const MobileLoginForm = ({
           </Button>
         </form>
       </Form>
+
+      <div className="text-center">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{" "}
+          <a
+            href="/auth/register"
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Register here
+          </a>
+        </p>
+      </div>
     </div>
   );
 };
