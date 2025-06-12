@@ -1,16 +1,11 @@
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vite';
-import mkcert from 'vite-plugin-mkcert';
 
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react(),
-        mkcert({
-            hosts: ['*.jameeportal.dev', '*.local.jameeportal.dev'],
-            autoUpgrade: true,
-        }),
     ],
     resolve: {
         alias: {
@@ -18,9 +13,9 @@ export default defineConfig({
         },
     },
     server: {
-        open: 'https://localhost:443',
+        open: 'http://localhost:9507',
         host: '0.0.0.0',
-        port: 443,
+        port: 9507,
         strictPort: true,
     },
 });
