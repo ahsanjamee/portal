@@ -37,7 +37,6 @@ export class SmsService {
         message: string,
         messageType: string = 'OTHER'
     ): Promise<SmsResponse> {
-        const fetch = (await import('node-fetch')).default;
         const senderId = this.configService.values.sms.senderId || '8809601004762';
         const userName = this.configService.values.sms.username;
         const apiKey = this.configService.values.sms.apiKey;
@@ -60,23 +59,21 @@ export class SmsService {
             Message: message,
         };
 
-        const options = {
+        const requestOptions = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(payload),
-            agent: new https.Agent({
-                rejectUnauthorized: false,
-            }),
         };
 
         try {
             this.logger.log(`Sending SMS to: ${mobileNumberString}`);
 
+            // Use built-in fetch API (available in Node.js 18+)
             const response = await fetch(
                 this.configService.values.sms.apiUrl || 'https://api.mimsms.com/api/SmsSending/SMS',
-                options
+                requestOptions
             );
             const result = await response.json() as SmsResponse;
 
@@ -236,4 +233,6 @@ export class SmsService {
             },
         };
     }
+
+
 } 
