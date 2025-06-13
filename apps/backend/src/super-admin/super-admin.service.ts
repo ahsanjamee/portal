@@ -15,7 +15,6 @@ export class SuperAdminService {
         // Build where condition for search
         const whereCondition = {
             authType: AuthType.END_USER,
-            isActive: true,
             ...(normalizedQuery.search && {
                 OR: [
                     { mobileNumber: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
@@ -71,7 +70,6 @@ export class SuperAdminService {
         // Build where condition for search
         const whereCondition = {
             authType: AuthType.ADMIN,
-            isActive: true,
             ...(normalizedQuery.search && {
                 OR: [
                     { mobileNumber: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
