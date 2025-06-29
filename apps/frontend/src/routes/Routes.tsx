@@ -194,6 +194,14 @@ const components = {
     name: "AdminUserProfilePageLazy",
   }),
 
+  SmsStatsIndexLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/super-admin/sms/SmsStatsIndex").then((m) => ({
+        default: m.SmsStatsIndex,
+      })),
+    name: "SmsStatsIndexLazy",
+  }),
+
   // Mobile Auth Components
   AuthMobileLoginLazy: LazyFactory({
     factory: () =>
@@ -322,6 +330,10 @@ export const Routes = () => {
             {
               path: "/super-admin/admin/:id",
               Component: components.AdminUserProfilePageLazy,
+            },
+            {
+              path: "/super-admin/sms-stats",
+              Component: components.SmsStatsIndexLazy,
             },
           ],
         },

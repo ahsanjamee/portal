@@ -131,6 +131,8 @@ export const AuthRegister = () => {
         authType: "END_USER" as const,
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
+        email: response.email || "",
+        mobileNumber: response.mobileNumber as string,
         profile: response.profile || undefined,
       };
 
@@ -174,6 +176,8 @@ export const AuthRegister = () => {
         authType: "ADMIN" as const,
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
+        email: response.email || "",
+        mobileNumber: response.mobileNumber as string,
         profile: response.profile || undefined,
       };
 

@@ -1,11 +1,13 @@
-import { Controller, Get, Query, UseGuards, Patch, Param, Delete, Body } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Patch, Param, Delete, Body, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { SuperAdminService } from './super-admin.service';
 import { SuperAdminRoleGuard } from '../libs/guards/role.guard';
 import { PaginationQueryDto, PaginatedDto } from '../common/dto/pagination.dto';
 import { UserWithProfileResponseDto } from '../user/dto/response.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/libs/auth/jwt.guard';
-import { EndUserQueryDto } from './dto';
+import { EndUserQueryDto, SmsStatsQueryDto } from './dto';
+import { TypedRoute } from '@nestia/core';
 
 interface UpdateUserStatusDto {
     isActive: boolean;
@@ -55,5 +57,29 @@ export class SuperAdminController {
     @Delete('admins/:id')
     async deleteAdmin(@Param('id') id: string) {
         return this.superAdminService.deleteUser(id, 'ADMIN');
+    }
+
+    @Get('sms-stats')
+    async getSmsStats(
+        @Query() query: SmsStatsQueryDto
+    ): Promise<PaginatedDto<any>> {
+        return this.superAdminService.getSmsStats(query);
+    }
+
+    @Get('sms-stats/summary')
+    async getSmsStatsSummary(
+        @Query('startDate') startDate?: string,
+        @Query('endDate') endDate?: string,
+    ) {
+        return this.superAdminService.getSmsStatsSummary(startDate, endDate);
+    }
+
+    @TypedRoute.Post('export/users')
+    async exportEndUsers(@Res() res: Response) {
+        const fileBuffer = await this.superAdminService.exportUserList();
+
+        res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.header('Content-Disposition', `attachment; filename="End_Users_Export_${new Date().toISOString().split('T')[0]}.xlsx"`);
+        res.end(fileBuffer);
     }
 } 

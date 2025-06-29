@@ -26,7 +26,7 @@ export const AuthLayout: FC<PropsWithChildren> = ({ children }) => {
       <div className={classes}>
         <div className="mb-10 flex justify-center flex-col items-center">
           <img src="/logo.png" alt="ADI" className="w-24 h-24" />
-          <h1 className="text-2xl font-bold mt-8">ADI - Super Admin</h1>
+          <h1 className="text-2xl font-bold mt-8">ADI - Admin</h1>
         </div>
         <div className="sm:w-[460px] authlayout-content h-max rounded-md p-10 mb-5 shadow-[0_4px_24px_0px_rgba(0,0,0,0.04)] bg-white">
           {children}

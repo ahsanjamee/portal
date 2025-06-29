@@ -1,3 +1,4 @@
+import { useAuthAxios } from '@/lib/http/axios.hook';
 import { makeQuery, makeMutation } from '@/lib/makeQuery/makeQuery';
 import { superAdminService } from '@portal/portal-api-client';
 import type {
@@ -12,6 +13,7 @@ import type {
     DeleteSuperAdminEndUsersIdMutationResponse,
     DeleteSuperAdminAdminsIdMutationResponse,
 } from '@portal/portal-api-client';
+import { useMutation } from '@tanstack/react-query';
 
 export const superAdminUsersService = {
     // Get all end users (farmers)
@@ -63,4 +65,13 @@ export const superAdminUsersService = {
     >(
         (id) => superAdminService.deleteSuperAdminAdminsId(id)
     ),
+
+    useExportUsers: () => {
+        const axios = useAuthAxios();
+        return useMutation({
+            mutationFn: async () => {
+                return axios.post<any>(`super-admin/export/users`, {}, { responseType: 'blob' });
+            },
+        });
+    },
 }; 

@@ -359,6 +359,184 @@
         "x-samchon-controller": "SuperAdminController"
       }
     },
+    "/super-admin/sms-stats": {
+      "get": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "messageType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoany"
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["super_admin", "sms_stats", "getSmsStats"],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
+    "/super-admin/sms-stats/summary": {
+      "get": {
+        "tags": ["Super Admin"],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "number"
+                    },
+                    "successful": {
+                      "type": "number"
+                    },
+                    "failed": {
+                      "type": "number"
+                    },
+                    "otpCount": {
+                      "type": "number"
+                    },
+                    "adminNotificationCount": {
+                      "type": "number"
+                    },
+                    "endUserNotificationCount": {
+                      "type": "number"
+                    },
+                    "broadcastCount": {
+                      "type": "number"
+                    },
+                    "successRate": {
+                      "type": "number"
+                    },
+                    "failureRate": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "total",
+                    "successful",
+                    "failed",
+                    "otpCount",
+                    "adminNotificationCount",
+                    "endUserNotificationCount",
+                    "broadcastCount",
+                    "successRate",
+                    "failureRate"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "super_admin",
+          "sms_stats",
+          "summary",
+          "getSmsStatsSummary"
+        ],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
     "/user/register/end-user": {
       "post": {
         "summary": "Register a new end user (dairy, poultry, fish, or agriculture farmer) and send OTP",
@@ -1921,6 +2099,60 @@
           }
         },
         "required": ["isActive"]
+      },
+      "PaginatedDtoany": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {}
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": ["items", "pagination"]
+      },
+      "SmsStatsQueryDto": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1
+          },
+          "search": {
+            "type": "string"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sort": {
+            "oneOf": [
+              {
+                "const": "asc"
+              },
+              {
+                "const": "desc"
+              }
+            ]
+          }
+        },
+        "required": []
       },
       "JsonArray": {
         "type": "array",

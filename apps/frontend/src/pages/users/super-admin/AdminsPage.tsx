@@ -5,7 +5,7 @@ import { useSetTitle } from "@/stores/title-context";
 import { queryClient } from "@/utils/reactQueryClient";
 import { renderGenericError } from "@/utils/utils";
 import { useModal } from "@ebay/nice-modal-react";
-import { Badge, Group, Stack, Switch, Text } from "@mantine/core";
+import { Group, Stack, Switch, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Trash } from "@phosphor-icons/react";
 import type { UserWithProfileResponseDto } from "@portal/portal-api-client";
@@ -118,61 +118,33 @@ export const AdminsPage = () => {
           </span>
         ),
       },
-
       {
-        accessorKey: "profile.areaOfExpertise",
-        header: "Expertise",
+        accessorKey: "email",
+        header: "Email",
         maxSize: 200,
-        size: 180,
+        size: 150,
         Cell: ({ row }) => (
           <span className="block text-sm leading-5 text-[#1D2823]">
-            {(row.original.profile as any)?.areaOfExpertise || "N/A"}
+            {row.original.email === row.original.mobileNumber
+              ? "N/A"
+              : row.original.email}
           </span>
         ),
         enableSorting: false,
       },
       {
-        accessorKey: "profile.jobPosition",
-        header: "Position",
-        maxSize: 150,
-        size: 120,
+        accessorKey: "userType",
+        header: "User Type",
         Cell: ({ row }) => (
           <span className="block text-sm leading-5 text-[#1D2823]">
-            {(row.original.profile as any)?.jobPosition || "N/A"}
+            {row.original.profile?.userType === "SERVICE_PROVIDER"
+              ? "Service Provider"
+              : "Chemist"}
           </span>
         ),
         enableSorting: false,
       },
-      {
-        accessorKey: "profile.serviceExperience",
-        header: "Experience",
-        maxSize: 120,
-        size: 100,
-        Cell: ({ row }) => (
-          <span className="block text-sm leading-5 text-[#1D2823]">
-            {(row.original.profile as any)?.serviceExperience
-              ? `${(row.original.profile as any).serviceExperience} years`
-              : "N/A"}
-          </span>
-        ),
-        enableSorting: false,
-      },
-      {
-        accessorKey: "isVerified",
-        header: "Verified",
-        maxSize: 100,
-        size: 80,
-        Cell: ({ row }) => (
-          <Badge
-            variant="light"
-            color={row.original.isVerified ? "green" : "orange"}
-            size="sm"
-          >
-            {row.original.isVerified ? "Yes" : "No"}
-          </Badge>
-        ),
-        enableSorting: false,
-      },
+
       {
         accessorKey: "createdAt",
         header: "Created",
@@ -188,9 +160,17 @@ export const AdminsPage = () => {
       <Group
         gap={8}
         onClick={(e) => e.stopPropagation()}
-        w={"140"}
+        w={"180"}
         className="flex flex-nowrap"
       >
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          className="text-xs mr-2"
+          onClick={() => handleRowClick(row.original)}
+        >
+          Details
+        </Button>
         <Switch
           size="md"
           className="border-0"

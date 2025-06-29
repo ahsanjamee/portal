@@ -7,7 +7,7 @@ import { renderGenericError } from "@/utils/utils";
 import { useModal } from "@ebay/nice-modal-react";
 import { Badge, Group, Stack, Switch, Text, Select } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { Trash } from "@phosphor-icons/react";
+import { ExportIcon, Trash } from "@phosphor-icons/react";
 import type { UserWithProfileResponseDto } from "@portal/portal-api-client";
 import dayjs from "dayjs";
 import {
@@ -53,6 +53,9 @@ export const EndUsersPage = () => {
     superAdminUsersService.useGetEndUsers(queryParams, {
       queryKey: ["super-admin", "end-users", queryParams],
     });
+
+  const { mutateAsync: exportUsers, isPending: exportLoading } =
+    superAdminUsersService.useExportUsers();
 
   const { mutate: deleteUser, isPending: deleteLoading } =
     superAdminUsersService.useDeleteEndUser({
@@ -111,13 +114,34 @@ export const EndUsersPage = () => {
     });
   };
 
+  const handleExportUsers = async () => {
+    await exportUsers()
+      .then((res) => {
+        const url = window.URL.createObjectURL(
+          new Blob([res.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          })
+        );
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.download = `Users.xlsx`;
+        a.rel = "noopener noreferrer";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      })
+      .catch((e) => {
+        notifications.show({ message: (e as any).message, color: "red" });
+      });
+  };
+
   const columns = useMemo<MRT_ColumnDef<UserWithProfileResponseDto>[]>(
     () => [
       {
         accessorKey: "profile.name",
         header: "Name",
-        maxSize: 250,
-        size: 200,
+
         Cell: ({ row }) => (
           <Text className="block text-sm leading-5 text-[#1D2823]">
             {row.original.profile?.name || "N/A"}
@@ -128,8 +152,6 @@ export const EndUsersPage = () => {
       {
         accessorKey: "profile.userType",
         header: "User Type",
-        maxSize: 250,
-        size: 200,
         Cell: ({ row }) => {
           const userType = row.original.profile?.userType;
           const displayName = userType
@@ -164,8 +186,6 @@ export const EndUsersPage = () => {
       {
         accessorKey: "mobileNumber",
         header: "Mobile Number",
-        maxSize: 200,
-        size: 150,
         Cell: ({ row }) => (
           <span className="block text-sm leading-5 text-[#1D2823]">
             {row.original.mobileNumber || "N/A"}
@@ -175,8 +195,6 @@ export const EndUsersPage = () => {
       {
         accessorKey: "email",
         header: "Email",
-        maxSize: 250,
-        size: 200,
         Cell: ({ row }) => (
           <span className="block text-sm leading-5 text-[#1D2823]">
             {row.original.email === row.original.mobileNumber
@@ -184,36 +202,9 @@ export const EndUsersPage = () => {
               : row.original.email || "N/A"}
           </span>
         ),
+        enableSorting: false,
       },
 
-      {
-        accessorKey: "profile.address",
-        header: "Address",
-        maxSize: 300,
-        size: 250,
-        Cell: ({ row }) => (
-          <span className="block text-sm leading-5 text-[#1D2823]">
-            {row.original.profile?.address || "N/A"}
-          </span>
-        ),
-        enableSorting: false,
-      },
-      {
-        accessorKey: "isVerified",
-        header: "Verified",
-        maxSize: 100,
-        size: 80,
-        Cell: ({ row }) => (
-          <Badge
-            variant="light"
-            color={row.original.isVerified ? "green" : "orange"}
-            size="sm"
-          >
-            {row.original.isVerified ? "Yes" : "No"}
-          </Badge>
-        ),
-        enableSorting: false,
-      },
       {
         accessorKey: "createdAt",
         header: "Created",
@@ -229,9 +220,17 @@ export const EndUsersPage = () => {
       <Group
         gap={8}
         onClick={(e) => e.stopPropagation()}
-        w={"140"}
+        w={"180"}
         className="flex flex-nowrap"
       >
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          className="text-xs mr-2"
+          onClick={() => handleRowClick(row.original)}
+        >
+          Details
+        </Button>
         <Switch
           size="md"
           className="border-0"
@@ -272,6 +271,10 @@ export const EndUsersPage = () => {
             Manage end users and farmers on the platform
           </Text>
         </Stack>
+        <Button onClick={handleExportUsers} disabled={exportLoading}>
+          <ExportIcon weight="bold" color="#ffff" size={20} className="mr-2" />
+          {exportLoading ? "Exporting..." : "Export"}
+        </Button>
       </Group>
 
       <Group className="mb-4">

@@ -2,5 +2,7 @@ export * from "./deleteSuperAdminAdminsId";
 export * from "./deleteSuperAdminEndUsersId";
 export * from "./getSuperAdminAdmins";
 export * from "./getSuperAdminEndUsers";
+export * from "./getSuperAdminSmsStats";
+export * from "./getSuperAdminSmsStatsSummary";
 export * from "./patchSuperAdminAdminsIdStatus";
 export * from "./patchSuperAdminEndUsersIdStatus";

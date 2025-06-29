@@ -23,6 +23,14 @@ export const operations = {
     path: "/super-admin/admins/:id",
     method: "delete",
   },
+  "get_super-admin-sms-stats": {
+    path: "/super-admin/sms-stats",
+    method: "get",
+  },
+  "get_super-admin-sms-stats-summary": {
+    path: "/super-admin/sms-stats/summary",
+    method: "get",
+  },
   "post_user-register-end-user": {
     path: "/user/register/end-user",
     method: "post",

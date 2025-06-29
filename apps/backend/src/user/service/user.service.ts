@@ -68,6 +68,8 @@ export class UserService {
             authType: result.user.authType as AuthTypeDto,
         });
 
+        await this.smsService.sendSms(createEndUserDto.mobileNumber, 'Registration successful. Thank you, Stay with us.', 'END_USER_NOTIFICATION');
+
         return {
             id: result.user.id,
             authType: result.user.authType,
@@ -119,7 +121,7 @@ export class UserService {
             return { user, profile };
         });
 
-        console.log("=======", result.user);
+        await this.smsService.sendSms(createAdminUserDto.mobileNumber, 'Registration successful. Thank you, Stay with us.', 'ADMIN_NOTIFICATION');
 
         // Generate JWT tokens
         const tokens = await this.jwtAuthService.generateTokens({

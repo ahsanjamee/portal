@@ -3,7 +3,7 @@ import { useGlobalStore } from "@/stores/global.store";
 import NiceModal from "@ebay/nice-modal-react";
 import { AppShell, Burger, Group, NavLink, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { UserCheckIcon, UsersIcon } from "@phosphor-icons/react";
+import { ChatIcon, UserCheckIcon, UsersIcon } from "@phosphor-icons/react";
 import { RiUserFill } from "react-icons/ri";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PrimaryTopbar } from "./topbar/PrimaryTopbar";
@@ -25,6 +25,11 @@ export const AppLayoutForSuperAdmin = () => {
       label: "Admin Users",
       to: "/super-admin/admins",
       icon: <UserCheckIcon size={20} />,
+    },
+    {
+      label: "SMS Stats",
+      to: "/super-admin/sms-stats",
+      icon: <ChatIcon size={20} />,
     },
   ];
 
