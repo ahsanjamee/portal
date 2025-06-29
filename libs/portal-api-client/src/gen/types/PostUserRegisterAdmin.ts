@@ -31,11 +31,11 @@ export type PostUserRegisterAdmin201 = {
      * @type string
      */
     id: string;
+    userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
     /**
      * @type string
      */
     userId: string;
-    userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
     /**
      * @type string
      */
@@ -92,11 +92,11 @@ export type PostUserRegisterAdminMutationResponse = {
      * @type string
      */
     id: string;
+    userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
     /**
      * @type string
      */
     userId: string;
-    userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
     /**
      * @type string
      */

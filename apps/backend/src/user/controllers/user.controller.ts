@@ -1,15 +1,15 @@
 import { Controller } from '@nestjs/common';
 import { TypedBody, TypedRoute, TypedParam } from '@nestia/core';
 import { ApiTags } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { JwtAuthService } from '../libs/auth/jwt.service';
-import { Public } from '../libs/auth/jwt.guard';
+import { UserService } from '../service/user.service';
+import { JwtAuthService } from '../../libs/auth/jwt.service';
+import { Public } from '../../libs/auth/jwt.guard';
 import {
     CreateEndUserDto,
     CreateAdminUserDto,
     CreateSuperAdminDto
-} from './dto/create-user.dto';
-import { SuperAdminLoginDto, LoginDto, VerifyOtpDto, SendOtpDto, RefreshTokenDto, LogoutDto } from './dto/login.dto';
+} from '../dto/create-user.dto';
+import { SuperAdminLoginDto, LoginDto, VerifyOtpDto, SendOtpDto, RefreshTokenDto, LogoutDto } from '../dto/login.dto';
 
 @Controller('user')
 @ApiTags('User')

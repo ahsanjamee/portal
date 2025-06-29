@@ -52,9 +52,7 @@ export const OtpVerificationForm = ({
 
   /* ====== Auto start timer on mount ======== */
   useEffect(() => {
-    console.log("useEffect triggered - autoStartTimer:", autoStartTimer);
     if (autoStartTimer) {
-      console.log("Starting timer...");
       startTimer();
     }
   }, [autoStartTimer, startTimer]);
@@ -72,7 +70,7 @@ export const OtpVerificationForm = ({
       startTimer();
     } catch (error) {
       // Error handling is done in parent component
-      console.error("Failed to resend OTP:", error);
+      renderGenericError(error);
     }
   };
 

@@ -19,6 +19,8 @@ export interface EndUserProfileResponseDto {
     userType: EndUserType;
     name: string;
     address: string;
+    email?: string;
+    photo?: string;
     farmData: object; // JSON data
 }
 
@@ -28,6 +30,7 @@ export interface AdminUserProfileResponseDto {
     userType: AdminUserType;
     name: string;
     address: string;
+    email?: string;
     photo?: string;
     lastDegree: string;
     areaOfExpertise: string;

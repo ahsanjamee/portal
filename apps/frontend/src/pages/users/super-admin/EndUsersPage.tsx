@@ -5,7 +5,7 @@ import { useSetTitle } from "@/stores/title-context";
 import { queryClient } from "@/utils/reactQueryClient";
 import { renderGenericError } from "@/utils/utils";
 import { useModal } from "@ebay/nice-modal-react";
-import { Badge, Group, Stack, Switch, Text } from "@mantine/core";
+import { Badge, Group, Stack, Switch, Text, Select } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Trash } from "@phosphor-icons/react";
 import type { UserWithProfileResponseDto } from "@portal/portal-api-client";
@@ -16,6 +16,7 @@ import {
   type MRT_SortingState,
 } from "mantine-react-table";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { superAdminUsersService } from "./services/super-admin-users.service";
 
 export const EndUsersPage = () => {
@@ -25,17 +26,32 @@ export const EndUsersPage = () => {
     pageSize: 10,
   });
   const [search, setSearch] = useState<string>("");
+  const [userType, setUserType] = useState<
+    | "DAIRY_FARMER"
+    | "POULTRY_FARMER"
+    | "FISH_FARMER"
+    | "AGRICULTURE_FARMER"
+    | ""
+  >("");
   const consentModal = useModal(ConsentModal);
+  const navigate = useNavigate();
 
   useSetTitle("End Users (Farmers)");
 
+  const queryParams = {
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+    sortBy: sorting.length ? (sorting[0]?.id as string) : "createdAt",
+    sort: (sorting.length ? (sorting[0]?.desc ? "desc" : "asc") : "desc") as
+      | "asc"
+      | "desc",
+    search,
+    userType: userType || undefined,
+  };
+
   const { data, isLoading, error, isFetching, refetch } =
-    superAdminUsersService.useGetEndUsers({
-      page: pagination.pageIndex + 1,
-      pageSize: pagination.pageSize,
-      sortBy: sorting.length ? (sorting[0]?.id as string) : "createdAt",
-      sort: sorting.length ? (sorting[0]?.desc ? "desc" : "asc") : "desc",
-      search,
+    superAdminUsersService.useGetEndUsers(queryParams, {
+      queryKey: ["super-admin", "end-users", queryParams],
     });
 
   const { mutate: deleteUser, isPending: deleteLoading } =
@@ -89,6 +105,12 @@ export const EndUsersPage = () => {
     }
   };
 
+  const handleRowClick = (row: UserWithProfileResponseDto) => {
+    navigate(`/super-admin/end-user/${row.id}`, {
+      state: { user: row },
+    });
+  };
+
   const columns = useMemo<MRT_ColumnDef<UserWithProfileResponseDto>[]>(
     () => [
       {
@@ -101,6 +123,42 @@ export const EndUsersPage = () => {
             {row.original.profile?.name || "N/A"}
           </Text>
         ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: "profile.userType",
+        header: "User Type",
+        maxSize: 250,
+        size: 200,
+        Cell: ({ row }) => {
+          const userType = row.original.profile?.userType;
+          const displayName = userType
+            ? userType
+                .replace(/_/g, " ")
+                .toLowerCase()
+                .replace(/\b\w/g, (l) => l.toUpperCase())
+            : "N/A";
+          return (
+            <Badge
+              variant="light"
+              color={
+                userType === "DAIRY_FARMER"
+                  ? "blue"
+                  : userType === "POULTRY_FARMER"
+                    ? "green"
+                    : userType === "FISH_FARMER"
+                      ? "cyan"
+                      : userType === "AGRICULTURE_FARMER"
+                        ? "orange"
+                        : "gray"
+              }
+              size="md"
+              w={150}
+            >
+              {displayName}
+            </Badge>
+          );
+        },
         enableSorting: false,
       },
       {
@@ -121,10 +179,13 @@ export const EndUsersPage = () => {
         size: 200,
         Cell: ({ row }) => (
           <span className="block text-sm leading-5 text-[#1D2823]">
-            {row.original.email || "N/A"}
+            {row.original.email === row.original.mobileNumber
+              ? "N/A"
+              : row.original.email || "N/A"}
           </span>
         ),
       },
+
       {
         accessorKey: "profile.address",
         header: "Address",
@@ -213,6 +274,23 @@ export const EndUsersPage = () => {
         </Stack>
       </Group>
 
+      <Group className="mb-4">
+        <Select
+          placeholder="Filter by user type"
+          value={userType}
+          onChange={(value) => setUserType((value as typeof userType) || "")}
+          data={[
+            { value: "", label: "All Types" },
+            { value: "DAIRY_FARMER", label: "Dairy Farmer" },
+            { value: "POULTRY_FARMER", label: "Poultry Farmer" },
+            { value: "FISH_FARMER", label: "Fish Farmer" },
+            { value: "AGRICULTURE_FARMER", label: "Agriculture Farmer" },
+          ]}
+          clearable
+          w={200}
+        />
+      </Group>
+
       <PaginatedTable
         columns={columns}
         data={data?.items ?? []}
@@ -231,6 +309,7 @@ export const EndUsersPage = () => {
         enableRowActions
         renderRowActions={renderRowActions}
         positionActionsColumn="last"
+        onRowClick={handleRowClick}
       />
     </>
   );

@@ -19,6 +19,14 @@ export type EndUserProfileResponseDto = {
    */
   address: string;
   /**
+   * @type string | undefined
+   */
+  email?: string;
+  /**
+   * @type string | undefined
+   */
+  photo?: string;
+  /**
    * @type object
    */
   farmData: _Object;

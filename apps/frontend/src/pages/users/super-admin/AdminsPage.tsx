@@ -16,6 +16,7 @@ import {
   type MRT_SortingState,
 } from "mantine-react-table";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { superAdminUsersService } from "./services/super-admin-users.service";
 
 export const AdminsPage = () => {
@@ -26,6 +27,7 @@ export const AdminsPage = () => {
   });
   const [search, setSearch] = useState<string>("");
   const consentModal = useModal(ConsentModal);
+  const navigate = useNavigate();
 
   useSetTitle("Admin Users");
 
@@ -83,6 +85,12 @@ export const AdminsPage = () => {
     if (res) {
       deleteUser(id);
     }
+  };
+
+  const handleRowClick = (row: UserWithProfileResponseDto) => {
+    navigate(`/super-admin/admin/${row.id}`, {
+      state: { user: row },
+    });
   };
 
   const columns = useMemo<MRT_ColumnDef<UserWithProfileResponseDto>[]>(
@@ -243,6 +251,7 @@ export const AdminsPage = () => {
         enableRowActions
         renderRowActions={renderRowActions}
         positionActionsColumn="last"
+        onRowClick={handleRowClick}
       />
     </>
   );

@@ -4,25 +4,46 @@ import { AuthType } from '@prisma/client';
 import { PaginationQueryDto, PaginatedDto, resetPaginationQuery, paginatedData } from '../common/dto/pagination.dto';
 import { UserWithProfileResponseDto } from '../user/dto/response.dto';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { EndUserQueryDto } from './dto';
 
 @Injectable()
 export class SuperAdminService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async getAllEndUsers(query: PaginationQueryDto): Promise<PaginatedDto<UserWithProfileResponseDto>> {
+    async getAllEndUsers(query: EndUserQueryDto): Promise<PaginatedDto<UserWithProfileResponseDto>> {
         const normalizedQuery = resetPaginationQuery(query);
 
-        // Build where condition for search
-        const whereCondition = {
+        // Build where condition for search and userType filtering
+        let whereCondition: any = {
             authType: AuthType.END_USER,
-            ...(normalizedQuery.search && {
-                OR: [
-                    { mobileNumber: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
-                    { email: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
-                    { endUserProfile: { name: { contains: normalizedQuery.search, mode: 'insensitive' as const } } }
-                ]
-            })
         };
+
+        // Handle different combinations of userType and search filters
+        if (query.userType && normalizedQuery.search) {
+            // Both userType and search provided - combine them with AND
+            whereCondition.AND = [
+                { endUserProfile: { userType: query.userType } },
+                {
+                    OR: [
+                        { mobileNumber: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
+                        { email: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
+                        { endUserProfile: { name: { contains: normalizedQuery.search, mode: 'insensitive' as const } } }
+                    ]
+                }
+            ];
+        } else if (query.userType) {
+            // Only userType provided
+            whereCondition.endUserProfile = {
+                userType: query.userType
+            };
+        } else if (normalizedQuery.search) {
+            // Only search provided
+            whereCondition.OR = [
+                { mobileNumber: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
+                { email: { contains: normalizedQuery.search, mode: 'insensitive' as const } },
+                { endUserProfile: { name: { contains: normalizedQuery.search, mode: 'insensitive' as const } } }
+            ];
+        }
 
         // Get total count
         const total = await this.prisma.user.count({

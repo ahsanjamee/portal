@@ -15,6 +15,27 @@
         "tags": ["Super Admin"],
         "parameters": [
           {
+            "name": "userType",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "DAIRY_FARMER"
+                },
+                {
+                  "const": "POULTRY_FARMER"
+                },
+                {
+                  "const": "FISH_FARMER"
+                },
+                {
+                  "const": "AGRICULTURE_FARMER"
+                }
+              ]
+            },
+            "required": false
+          },
+          {
             "name": "page",
             "in": "query",
             "schema": {
@@ -406,9 +427,6 @@
                         "id": {
                           "type": "string"
                         },
-                        "userId": {
-                          "type": "string"
-                        },
                         "userType": {
                           "oneOf": [
                             {
@@ -425,8 +443,21 @@
                             }
                           ]
                         },
+                        "userId": {
+                          "type": "string"
+                        },
                         "address": {
                           "type": "string"
+                        },
+                        "photo": {
+                          "oneOf": [
+                            {
+                              "type": "null"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
                         },
                         "farmData": {
                           "oneOf": [
@@ -454,9 +485,10 @@
                       "required": [
                         "name",
                         "id",
-                        "userId",
                         "userType",
+                        "userId",
                         "address",
+                        "photo",
                         "farmData"
                       ]
                     },
@@ -556,9 +588,6 @@
                         "id": {
                           "type": "string"
                         },
-                        "userId": {
-                          "type": "string"
-                        },
                         "userType": {
                           "oneOf": [
                             {
@@ -568,6 +597,9 @@
                               "const": "TRADER_CHEMIST"
                             }
                           ]
+                        },
+                        "userId": {
+                          "type": "string"
                         },
                         "address": {
                           "type": "string"
@@ -605,8 +637,8 @@
                       "required": [
                         "name",
                         "id",
-                        "userId",
                         "userType",
+                        "userId",
                         "address",
                         "photo",
                         "lastDegree",
@@ -770,9 +802,6 @@
                             "id": {
                               "type": "string"
                             },
-                            "userId": {
-                              "type": "string"
-                            },
                             "userType": {
                               "oneOf": [
                                 {
@@ -789,8 +818,21 @@
                                 }
                               ]
                             },
+                            "userId": {
+                              "type": "string"
+                            },
                             "address": {
                               "type": "string"
+                            },
+                            "photo": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                }
+                              ]
                             },
                             "farmData": {
                               "oneOf": [
@@ -818,9 +860,10 @@
                           "required": [
                             "name",
                             "id",
-                            "userId",
                             "userType",
+                            "userId",
                             "address",
+                            "photo",
                             "farmData"
                           ]
                         },
@@ -833,9 +876,6 @@
                             "id": {
                               "type": "string"
                             },
-                            "userId": {
-                              "type": "string"
-                            },
                             "userType": {
                               "oneOf": [
                                 {
@@ -845,6 +885,9 @@
                                   "const": "TRADER_CHEMIST"
                                 }
                               ]
+                            },
+                            "userId": {
+                              "type": "string"
                             },
                             "address": {
                               "type": "string"
@@ -882,8 +925,8 @@
                           "required": [
                             "name",
                             "id",
-                            "userId",
                             "userType",
+                            "userId",
                             "address",
                             "photo",
                             "lastDegree",
@@ -1256,9 +1299,6 @@
                             "id": {
                               "type": "string"
                             },
-                            "userId": {
-                              "type": "string"
-                            },
                             "userType": {
                               "oneOf": [
                                 {
@@ -1275,8 +1315,21 @@
                                 }
                               ]
                             },
+                            "userId": {
+                              "type": "string"
+                            },
                             "address": {
                               "type": "string"
+                            },
+                            "photo": {
+                              "oneOf": [
+                                {
+                                  "type": "null"
+                                },
+                                {
+                                  "type": "string"
+                                }
+                              ]
                             },
                             "farmData": {
                               "oneOf": [
@@ -1304,9 +1357,10 @@
                           "required": [
                             "name",
                             "id",
-                            "userId",
                             "userType",
+                            "userId",
                             "address",
+                            "photo",
                             "farmData"
                           ]
                         },
@@ -1319,9 +1373,6 @@
                             "id": {
                               "type": "string"
                             },
-                            "userId": {
-                              "type": "string"
-                            },
                             "userType": {
                               "oneOf": [
                                 {
@@ -1331,6 +1382,9 @@
                                   "const": "TRADER_CHEMIST"
                                 }
                               ]
+                            },
+                            "userId": {
+                              "type": "string"
                             },
                             "address": {
                               "type": "string"
@@ -1368,8 +1422,8 @@
                           "required": [
                             "name",
                             "id",
-                            "userId",
                             "userType",
+                            "userId",
                             "address",
                             "photo",
                             "lastDegree",
@@ -1397,6 +1451,172 @@
         },
         "x-samchon-accessor": ["user", "getUserById"],
         "x-samchon-controller": "UserController"
+      }
+    },
+    "/user/profile": {
+      "get": {
+        "summary": "Get the current user's profile information",
+        "description": "Get Current User Profile",
+        "tags": ["User Profile"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/EndUserProfileResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AdminUserProfileResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["user", "profile", "getCurrentUserProfile"],
+        "x-samchon-controller": "ProfileController"
+      }
+    },
+    "/user/profile/end-user": {
+      "put": {
+        "summary": "Update end user (farmer) profile information",
+        "description": "Update End User Profile",
+        "tags": ["User Profile"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEndUserProfileDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileUpdateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "user",
+          "profile",
+          "end_user",
+          "updateEndUserProfile"
+        ],
+        "x-samchon-controller": "ProfileController"
+      }
+    },
+    "/user/profile/admin": {
+      "put": {
+        "summary": "Update admin user profile information",
+        "description": "Update Admin User Profile",
+        "tags": ["User Profile"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminUserProfileDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileUpdateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "user",
+          "profile",
+          "admin",
+          "updateAdminUserProfile"
+        ],
+        "x-samchon-controller": "ProfileController"
+      }
+    },
+    "/user/profile/image": {
+      "put": {
+        "summary": "Update profile image URL for both end users and admin users",
+        "description": "Update Profile Image",
+        "tags": ["User Profile"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageUrl": {
+                    "type": "string"
+                  }
+                },
+                "required": ["imageUrl"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileUpdateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "user",
+          "profile",
+          "image",
+          "updateProfileImage"
+        ],
+        "x-samchon-controller": "ProfileController"
       }
     }
   },
@@ -1504,6 +1724,12 @@
           "address": {
             "type": "string"
           },
+          "email": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
           "farmData": {
             "$ref": "#/components/schemas/object"
           }
@@ -1535,6 +1761,9 @@
             "type": "string"
           },
           "address": {
+            "type": "string"
+          },
+          "email": {
             "type": "string"
           },
           "photo": {
@@ -1580,6 +1809,52 @@
           }
         },
         "required": ["total", "current", "next", "previous"]
+      },
+      "EndUserQueryDto": {
+        "type": "object",
+        "properties": {
+          "userType": {
+            "oneOf": [
+              {
+                "const": "DAIRY_FARMER"
+              },
+              {
+                "const": "POULTRY_FARMER"
+              },
+              {
+                "const": "FISH_FARMER"
+              },
+              {
+                "const": "AGRICULTURE_FARMER"
+              }
+            ]
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1
+          },
+          "search": {
+            "type": "string"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sort": {
+            "oneOf": [
+              {
+                "const": "asc"
+              },
+              {
+                "const": "desc"
+              }
+            ]
+          }
+        },
+        "required": []
       },
       "PaginationQueryDto": {
         "type": "object",
@@ -1982,6 +2257,228 @@
           }
         },
         "required": ["email", "password"]
+      },
+      "ProfileUpdateResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "authType": {
+                "type": "string"
+              },
+              "mobileNumber": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "isVerified": {
+                "type": "boolean"
+              },
+              "isActive": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "authType",
+              "isVerified",
+              "isActive",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "profile": {}
+        },
+        "required": ["message", "user", "profile"]
+      },
+      "UpdateEndUserProfileDto": {
+        "type": "object",
+        "properties": {
+          "userType": {
+            "oneOf": [
+              {
+                "const": "DAIRY_FARMER"
+              },
+              {
+                "const": "POULTRY_FARMER"
+              },
+              {
+                "const": "FISH_FARMER"
+              },
+              {
+                "const": "AGRICULTURE_FARMER"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "farmData": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UpdateDairyFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/UpdatePoultryFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/UpdateFishFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/UpdateAgricultureFarmDataDto"
+              }
+            ]
+          }
+        },
+        "required": []
+      },
+      "UpdateDairyFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "totalCattlePopulation": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalMilkingCow": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalMilkProductionPerDay": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalCalf": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalFemaleCalf": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalMaleCalf": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": []
+      },
+      "UpdatePoultryFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "farmType": {
+            "oneOf": [
+              {
+                "const": "LAYER"
+              },
+              {
+                "const": "BROILER"
+              }
+            ]
+          },
+          "totalBird": {
+            "type": "number",
+            "minimum": 0
+          },
+          "totalEggProductionPerDay": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": []
+      },
+      "UpdateFishFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "totalPondAreaDecimal": {
+            "type": "number",
+            "minimum": 0
+          },
+          "fishType": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": []
+      },
+      "UpdateAgricultureFarmDataDto": {
+        "type": "object",
+        "properties": {
+          "totalAgricultureLandDecimal": {
+            "type": "number",
+            "minimum": 0
+          },
+          "typeOfAgriculture": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": []
+      },
+      "UpdateAdminUserProfileDto": {
+        "type": "object",
+        "properties": {
+          "userType": {
+            "oneOf": [
+              {
+                "const": "SERVICE_PROVIDER"
+              },
+              {
+                "const": "TRADER_CHEMIST"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastDegree": {
+            "type": "string",
+            "minLength": 1
+          },
+          "areaOfExpertise": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serviceExperience": {
+            "type": "number",
+            "minimum": 0
+          },
+          "jobPosition": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": []
       }
     },
     "securitySchemes": {
@@ -2002,6 +2499,9 @@
     },
     {
       "name": "User"
+    },
+    {
+      "name": "User Profile"
     }
   ],
   "x-samchon-emended": true

@@ -1,15 +1,15 @@
 import { Injectable, BadRequestException, UnauthorizedException, ConflictException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { SmsService } from '../libs/sms/sms.service';
-import { JwtAuthService } from '../libs/auth/jwt.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { SmsService } from '../../libs/sms/sms.service';
+import { JwtAuthService } from '../../libs/auth/jwt.service';
 import * as bcrypt from 'bcrypt';
 import {
     CreateEndUserDto,
     CreateAdminUserDto,
-} from './dto/create-user.dto';
-import { SuperAdminLoginDto, LoginDto, VerifyOtpDto, SendOtpDto } from './dto/login.dto';
+} from '../dto/create-user.dto';
+import { SuperAdminLoginDto, LoginDto, VerifyOtpDto, SendOtpDto } from '../dto/login.dto';
 import { AuthType } from '@prisma/client';
-import { AuthType as AuthTypeDto } from './dto/login.dto';
+import { AuthType as AuthTypeDto } from '../dto/login.dto';
 @Injectable()
 export class UserService {
     constructor(
@@ -72,6 +72,7 @@ export class UserService {
             id: result.user.id,
             authType: result.user.authType,
             mobileNumber: result.user.mobileNumber,
+            email: result.user.email || undefined,
             profile: result.profile,
             message: 'Registration successful.',
             ...tokens
@@ -132,6 +133,7 @@ export class UserService {
             id: result.user.id,
             authType: result.user.authType,
             mobileNumber: result.user.mobileNumber,
+            email: result.user.email || undefined,
             profile: result.profile,
             message: 'Admin user registered successfully.',
             ...tokens
@@ -211,6 +213,7 @@ export class UserService {
             id: user!.id,
             authType: user!.authType,
             mobileNumber: user!.mobileNumber,
+            email: user!.email || undefined,
             isVerified: true,
             profile: user!.endUserProfile || user!.adminUserProfile,
             message: 'OTP verified successfully',

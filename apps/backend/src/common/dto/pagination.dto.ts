@@ -25,8 +25,8 @@ export type PaginatedDto<T> = {
 
 export const resetPageOnlyQuery = (query: PaginationPageOnlyQueryDto) => {
     return {
-        page: query.page ? query.page - 1 : 0,
-        pageSize: query.pageSize || 20,
+        page: query.page ? Number(query.page) - 1 : 0,
+        pageSize: query.pageSize ? Number(query.pageSize) : 10,
     };
 };
 

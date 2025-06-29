@@ -31,10 +31,6 @@ export type GetUserId200 = {
          * @type string
          */
         id: string;
-        /**
-         * @type string
-         */
-        userId: string;
         userType:
           | "DAIRY_FARMER"
           | "POULTRY_FARMER"
@@ -43,7 +39,12 @@ export type GetUserId200 = {
         /**
          * @type string
          */
+        userId: string;
+        /**
+         * @type string
+         */
         address: string;
+        photo: null | string;
         farmData: null | string | number | boolean | JsonArray | JsonObject;
       }
     | {
@@ -55,11 +56,11 @@ export type GetUserId200 = {
          * @type string
          */
         id: string;
+        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */
         userId: string;
-        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */
@@ -104,10 +105,6 @@ export type GetUserIdQueryResponse = {
          * @type string
          */
         id: string;
-        /**
-         * @type string
-         */
-        userId: string;
         userType:
           | "DAIRY_FARMER"
           | "POULTRY_FARMER"
@@ -116,7 +113,12 @@ export type GetUserIdQueryResponse = {
         /**
          * @type string
          */
+        userId: string;
+        /**
+         * @type string
+         */
         address: string;
+        photo: null | string;
         farmData: null | string | number | boolean | JsonArray | JsonObject;
       }
     | {
@@ -128,11 +130,11 @@ export type GetUserIdQueryResponse = {
          * @type string
          */
         id: string;
+        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */
         userId: string;
-        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */

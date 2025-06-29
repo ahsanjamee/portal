@@ -33,10 +33,6 @@ export type PostUserRegisterEndUser201 = {
      * @type string
      */
     id: string;
-    /**
-     * @type string
-     */
-    userId: string;
     userType:
       | "DAIRY_FARMER"
       | "POULTRY_FARMER"
@@ -45,7 +41,12 @@ export type PostUserRegisterEndUser201 = {
     /**
      * @type string
      */
+    userId: string;
+    /**
+     * @type string
+     */
     address: string;
+    photo: null | string;
     farmData: null | string | number | boolean | JsonArray | JsonObject;
   };
   /**
@@ -85,10 +86,6 @@ export type PostUserRegisterEndUserMutationResponse = {
      * @type string
      */
     id: string;
-    /**
-     * @type string
-     */
-    userId: string;
     userType:
       | "DAIRY_FARMER"
       | "POULTRY_FARMER"
@@ -97,7 +94,12 @@ export type PostUserRegisterEndUserMutationResponse = {
     /**
      * @type string
      */
+    userId: string;
+    /**
+     * @type string
+     */
     address: string;
+    photo: null | string;
     farmData: null | string | number | boolean | JsonArray | JsonObject;
   };
   /**

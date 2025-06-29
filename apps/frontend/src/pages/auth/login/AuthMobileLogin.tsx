@@ -71,6 +71,8 @@ export const AuthMobileLogin = () => {
             : ("END_USER" as const),
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
+        email: response.email || "",
+        mobileNumber: response.mobileNumber || "",
         profile: response.profile || undefined,
       };
 

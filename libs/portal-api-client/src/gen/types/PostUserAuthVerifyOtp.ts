@@ -36,10 +36,6 @@ export type PostUserAuthVerifyOtp201 = {
          * @type string
          */
         id: string;
-        /**
-         * @type string
-         */
-        userId: string;
         userType:
           | "DAIRY_FARMER"
           | "POULTRY_FARMER"
@@ -48,7 +44,12 @@ export type PostUserAuthVerifyOtp201 = {
         /**
          * @type string
          */
+        userId: string;
+        /**
+         * @type string
+         */
         address: string;
+        photo: null | string;
         farmData: null | string | number | boolean | JsonArray | JsonObject;
       }
     | {
@@ -60,11 +61,11 @@ export type PostUserAuthVerifyOtp201 = {
          * @type string
          */
         id: string;
+        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */
         userId: string;
-        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */
@@ -124,10 +125,6 @@ export type PostUserAuthVerifyOtpMutationResponse = {
          * @type string
          */
         id: string;
-        /**
-         * @type string
-         */
-        userId: string;
         userType:
           | "DAIRY_FARMER"
           | "POULTRY_FARMER"
@@ -136,7 +133,12 @@ export type PostUserAuthVerifyOtpMutationResponse = {
         /**
          * @type string
          */
+        userId: string;
+        /**
+         * @type string
+         */
         address: string;
+        photo: null | string;
         farmData: null | string | number | boolean | JsonArray | JsonObject;
       }
     | {
@@ -148,11 +150,11 @@ export type PostUserAuthVerifyOtpMutationResponse = {
          * @type string
          */
         id: string;
+        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */
         userId: string;
-        userType: "SERVICE_PROVIDER" | "TRADER_CHEMIST";
         /**
          * @type string
          */

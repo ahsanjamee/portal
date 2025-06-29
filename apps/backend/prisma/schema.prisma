@@ -138,6 +138,7 @@ model EndUserProfile {
     // Personal Information (common for all end users)
     name        String
     address     String
+    photo       String?
     
     // Farm specific data (stored as flexible JSON)
     farmData    Json

@@ -5,6 +5,7 @@ import { PaginationQueryDto, PaginatedDto } from '../common/dto/pagination.dto';
 import { UserWithProfileResponseDto } from '../user/dto/response.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/libs/auth/jwt.guard';
+import { EndUserQueryDto } from './dto';
 
 interface UpdateUserStatusDto {
     isActive: boolean;
@@ -18,7 +19,7 @@ export class SuperAdminController {
 
     @Get('end-users')
     async getAllEndUsers(
-        @Query() query: PaginationQueryDto
+        @Query() query: EndUserQueryDto
     ): Promise<PaginatedDto<UserWithProfileResponseDto>> {
         return this.superAdminService.getAllEndUsers(query);
     }

@@ -1,42 +1,63 @@
 import { Loader } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { UploadIcon } from "../icons/AllIcons";
+import axios from "axios";
 
 type IUploadImageProps = {
   file: string;
   setFile: (value: string) => void;
-  setId: (value: string) => void;
-  mutateAsync: any;
-  uploading: boolean;
 };
 
-const UploadImage: React.FC<IUploadImageProps> = ({
-  file,
-  setFile,
-  mutateAsync,
-  uploading,
-  setId,
-}) => {
-  const uploadImages = async (files: File[]) => {
+const UploadImage: React.FC<IUploadImageProps> = ({ file, setFile }) => {
+  const uploadUrl = import.meta.env.VITE_CLOUDINARY_URL;
+  const upload_Preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const [uploading, setUploading] = useState(false);
+
+  const uploadImages = async (files: any[]) => {
     const file = files[0];
 
-    const response = await mutateAsync(file as File);
-    if (response !== undefined) {
-      setId(response.id);
-      setFile(response.url);
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", upload_Preset);
+    setUploading(true);
+
+    try {
+      const response = await axios.post(uploadUrl, formData);
+
+      setFile(response.data.secure_url);
+      setUploading(false);
+
       notifications.show({
         message: "Upload successful",
         color: "green",
       });
-    } else {
+    } catch (err) {
+      setUploading(false);
+      console.error("Upload error:", err);
+
       notifications.show({
-        message: "Upload failed",
+        message: "Upload failed. Please try again.",
         color: "red",
       });
     }
   };
+  // if (response !== undefined) {
+
+  //   setFile(response.url);
+  //   notifications.show({
+  //     message: "Upload successful",
+  //     color: "green",
+  //   });
+  // } else {
+  //   notifications.show({
+  //     message: "Upload failed",
+  //     color: "red",
+  //   });
+  // }
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -45,11 +66,16 @@ const UploadImage: React.FC<IUploadImageProps> = ({
       "image/png": [".png"],
     },
     maxFiles: 1, // Limit to only one file
-    maxSize: 10 * 1024 * 1024, // Max size in bytes (2MB)
+    maxSize: 5 * 1024 * 1024, // Max size in bytes (2MB)
     onDrop: useCallback(
       async (acceptedFiles: File[]) => {
         if (acceptedFiles.length !== 0) {
-          await uploadImages(acceptedFiles);
+          const files = acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          );
+          await uploadImages(files);
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +108,7 @@ const UploadImage: React.FC<IUploadImageProps> = ({
   return (
     <>
       {file !== "" ? (
-        <div className="relative max-w-[150px] h-full">
+        <div className="relative max-w-[150px] h-full mt-4">
           <img
             src={file}
             alt="Uploaded"
@@ -91,7 +117,6 @@ const UploadImage: React.FC<IUploadImageProps> = ({
           <button
             onClick={() => {
               setFile("");
-              setId("");
             }}
             className="absolute bg-white rounded-full z-50 shadow-xl top-[-10px] right-[-10px] p-1 hover:rotate-180 transition-all duration-300"
           >
@@ -115,7 +140,7 @@ const UploadImage: React.FC<IUploadImageProps> = ({
         <>
           <div
             {...getRootProps()}
-            className="bg-white rounded-md border-dashed border-gray-400 border-2 p-6 text-center cursor-pointer w-full col-span-5 relative"
+            className="bg-white w-full border-dashed border-gray-400 border-2 p-6 text-center cursor-pointer  col-span-5 relative"
           >
             <input {...getInputProps()} />
             {uploading ? (
@@ -130,7 +155,7 @@ const UploadImage: React.FC<IUploadImageProps> = ({
                   drag and drop
                 </div>
                 <div className="text-gray-400 text-xs  font-normal  ">
-                  We accept JPEG and PNG files (Max. 10MB)
+                  We accept JPEG and PNG files (Max. 5MB)
                 </div>
               </div>
             )}

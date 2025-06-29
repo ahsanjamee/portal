@@ -1,6 +1,11 @@
 import type { PaginatedDtoUserWithProfileResponseDto } from "./PaginatedDtoUserWithProfileResponseDto";
 
 export type GetSuperAdminEndUsersQueryParams = {
+  userType?:
+    | "DAIRY_FARMER"
+    | "POULTRY_FARMER"
+    | "FISH_FARMER"
+    | "AGRICULTURE_FARMER";
   /**
    * @type number | undefined
    */

@@ -22,12 +22,16 @@ export type EndUserProfile = {
     name: string;
     address: string;
     farmData: any;
+    userId: string;
+    photo?: string | null;
     userType: 'DAIRY_FARMER' | 'POULTRY_FARMER' | 'FISH_FARMER' | 'AGRICULTURE_FARMER';
 }
 
 export type GlobalStoreType = {
     authenticated: boolean;
     profile: EndUserProfile | AdminUserProfile | null;
+    email?: string;
+    mobileNumber: string;
     accessToken: string;
     refreshToken: string;
     language: 'en' | 'no';
@@ -38,6 +42,8 @@ export type GlobalStoreType = {
 export const globalStoreInitialState: GlobalStoreType = {
     authenticated: false,
     profile: null,
+    email: '',
+    mobileNumber: '',
     accessToken: '',
     refreshToken: '',
     language: 'en',
@@ -50,6 +56,8 @@ export type CookieStorage = {
     refreshToken: string;
     authType: 'END_USER' | 'SUPER_ADMIN' | 'ADMIN' | null
     profile: EndUserProfile | AdminUserProfile | null
+    email: string;
+    mobileNumber: string;
 };
 
 export const getGlobalStoreCookie = () => {
@@ -106,14 +114,41 @@ export class GlobalStore extends getStoreClass<GlobalStoreType>() {
             profile: res.profile!,
             authType: res.authType,
             language: 'en',
+            email: res.email || '',
+            mobileNumber: res.mobileNumber || '',
         }));
 
         setGlobalStoreCookie(() => {
             return {
+                email: res.email || '',
+                mobileNumber: res.mobileNumber || '',
                 accessToken: res.accessToken,
                 refreshToken: res.refreshToken,
                 authType: res.authType,
-                profile: res.profile || null
+                profile: res.profile || null,
+            };
+        });
+    };
+
+    onUpdateProfile = (res: any) => {
+        this.setState((p) => ({
+            ...p,
+            profile: res.profile,
+            email: res.user.email || '',
+        }));
+
+        setGlobalStoreCookie((prev) => {
+            if (!prev) {
+                return null;
+            }
+
+            return {
+                email: res.user.email || '',
+                mobileNumber: prev.mobileNumber,
+                accessToken: prev.accessToken,
+                refreshToken: prev.refreshToken,
+                authType: prev.authType,
+                profile: res.profile || null,
             };
         });
     };

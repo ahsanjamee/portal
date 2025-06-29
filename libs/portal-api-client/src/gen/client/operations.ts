@@ -63,4 +63,20 @@ export const operations = {
     path: "/user/:id",
     method: "get",
   },
+  "get_user-profile": {
+    path: "/user/profile",
+    method: "get",
+  },
+  "put_user-profile-end-user": {
+    path: "/user/profile/end-user",
+    method: "put",
+  },
+  "put_user-profile-admin": {
+    path: "/user/profile/admin",
+    method: "put",
+  },
+  "put_user-profile-image": {
+    path: "/user/profile/image",
+    method: "put",
+  },
 } as const;

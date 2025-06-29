@@ -15,6 +15,10 @@ export type AdminUserProfileResponseDto = {
   /**
    * @type string | undefined
    */
+  email?: string;
+  /**
+   * @type string | undefined
+   */
   photo?: string;
   /**
    * @type string
