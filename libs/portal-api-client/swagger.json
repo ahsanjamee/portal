@@ -418,6 +418,9 @@
                         }
                       ]
                     },
+                    "email": {
+                      "type": "string"
+                    },
                     "profile": {
                       "type": "object",
                       "properties": {
@@ -578,6 +581,9 @@
                           "type": "string"
                         }
                       ]
+                    },
+                    "email": {
+                      "type": "string"
                     },
                     "profile": {
                       "type": "object",
@@ -784,6 +790,9 @@
                           "type": "string"
                         }
                       ]
+                    },
+                    "email": {
+                      "type": "string"
                     },
                     "isVerified": {
                       "type": "boolean"
@@ -1487,12 +1496,21 @@
         "x-samchon-controller": "ProfileController"
       }
     },
-    "/user/profile/end-user": {
+    "/user/profile/end-user/{id}": {
       "put": {
         "summary": "Update end user (farmer) profile information",
         "description": "Update End User Profile",
         "tags": ["User Profile"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1529,12 +1547,21 @@
         "x-samchon-controller": "ProfileController"
       }
     },
-    "/user/profile/admin": {
+    "/user/profile/admin/{id}": {
       "put": {
         "summary": "Update admin user profile information",
         "description": "Update Admin User Profile",
         "tags": ["User Profile"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2336,6 +2363,9 @@
             "type": "string",
             "format": "email"
           },
+          "photo": {
+            "type": "string"
+          },
           "farmData": {
             "oneOf": [
               {
@@ -2476,6 +2506,9 @@
           "email": {
             "type": "string",
             "format": "email"
+          },
+          "photo": {
+            "type": "string"
           }
         },
         "required": []

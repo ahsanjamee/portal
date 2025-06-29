@@ -21,6 +21,10 @@ export type UpdateEndUserProfileDto = {
    * @type string | undefined, email
    */
   email?: string;
+  /**
+   * @type string | undefined
+   */
+  photo?: string;
   farmData?:
     | UpdateDairyFarmDataDto
     | UpdatePoultryFarmDataDto

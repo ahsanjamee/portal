@@ -28,4 +28,8 @@ export type UpdateAdminUserProfileDto = {
    * @type string | undefined, email
    */
   email?: string;
+  /**
+   * @type string | undefined
+   */
+  photo?: string;
 };

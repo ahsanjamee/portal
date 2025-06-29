@@ -67,12 +67,12 @@ export const operations = {
     path: "/user/profile",
     method: "get",
   },
-  "put_user-profile-end-user": {
-    path: "/user/profile/end-user",
+  "put_user-profile-end-user-id": {
+    path: "/user/profile/end-user/:id",
     method: "put",
   },
-  "put_user-profile-admin": {
-    path: "/user/profile/admin",
+  "put_user-profile-admin-id": {
+    path: "/user/profile/admin/:id",
     method: "put",
   },
   "put_user-profile-image": {

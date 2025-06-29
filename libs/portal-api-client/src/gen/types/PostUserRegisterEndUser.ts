@@ -22,6 +22,10 @@ export type PostUserRegisterEndUser201 = {
   authType: "END_USER" | "ADMIN" | "SUPER_ADMIN";
   mobileNumber: null | string;
   /**
+   * @type string | undefined
+   */
+  email?: string;
+  /**
    * @type object
    */
   profile: {
@@ -74,6 +78,10 @@ export type PostUserRegisterEndUserMutationResponse = {
   id: string;
   authType: "END_USER" | "ADMIN" | "SUPER_ADMIN";
   mobileNumber: null | string;
+  /**
+   * @type string | undefined
+   */
+  email?: string;
   /**
    * @type object
    */

@@ -22,6 +22,10 @@ export type PostUserAuthVerifyOtp201 = {
   authType: "END_USER" | "ADMIN" | "SUPER_ADMIN";
   mobileNumber: null | string;
   /**
+   * @type string | undefined
+   */
+  email?: string;
+  /**
    * @type boolean
    */
   isVerified: boolean;
@@ -110,6 +114,10 @@ export type PostUserAuthVerifyOtpMutationResponse = {
   id: string;
   authType: "END_USER" | "ADMIN" | "SUPER_ADMIN";
   mobileNumber: null | string;
+  /**
+   * @type string | undefined
+   */
+  email?: string;
   /**
    * @type boolean
    */
