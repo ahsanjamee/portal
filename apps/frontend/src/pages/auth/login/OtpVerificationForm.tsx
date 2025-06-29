@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { OtpVerificationType, otpVerificationSchema } from "./types";
 import { useOtpTimer } from "./useOtpTimer";
+import { renderGenericError } from "@/utils/utils";
 
 interface OtpVerificationFormProps {
   mobileNumber: string;

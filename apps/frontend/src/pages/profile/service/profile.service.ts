@@ -1,10 +1,10 @@
 import { makeMutation } from '@/lib/makeQuery/makeQuery';
 import { makeAuthMutation } from '@/utils/factory';
 import type {
-    PutUserProfileAdminMutationRequest,
-    PutUserProfileAdminMutationResponse,
-    PutUserProfileEndUserMutationRequest,
-    PutUserProfileEndUserMutationResponse,
+    PutUserProfileAdminIdMutationRequest,
+    PutUserProfileAdminIdMutationResponse,
+    PutUserProfileEndUserIdMutationRequest,
+    PutUserProfileEndUserIdMutationResponse,
 } from '@portal/portal-api-client';
 import { userProfileService } from '@portal/portal-api-client';
 import { UpdatePasswordDTO } from './types';
@@ -20,22 +20,22 @@ export const profileService = {
 
     // Update end user profile (farmers)
     useUpdateEndUserProfile: makeMutation<
-        PutUserProfileEndUserMutationResponse,
-        PutUserProfileEndUserMutationRequest & { id: string }
+        PutUserProfileEndUserIdMutationResponse,
+        PutUserProfileEndUserIdMutationRequest & { id: string }
     >(
         ({ id, ...data }) =>
-            userProfileService.putUserProfileEndUser(data, {
+            userProfileService.putUserProfileEndUserId(id, data, {
                 url: `/user/profile/end-user/${id}`
             })
     ),
 
     // Update admin user profile
     useUpdateAdminProfile: makeMutation<
-        PutUserProfileAdminMutationResponse,
-        PutUserProfileAdminMutationRequest & { id: string }
+        PutUserProfileAdminIdMutationResponse,
+        PutUserProfileAdminIdMutationRequest & { id: string }
     >(
         ({ id, ...data }) =>
-            userProfileService.putUserProfileAdmin(data, {
+            userProfileService.putUserProfileAdminId(id, data, {
                 url: `/user/profile/admin/${id}`
             })
     ),
