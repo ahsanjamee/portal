@@ -115,10 +115,6 @@ export const operations = {
     path: "/prescription/:id",
     method: "delete",
   },
-  "get_prescription-id-pdf": {
-    path: "/prescription/:id/pdf",
-    method: "get",
-  },
   "get_super-admin-prescriptions": {
     path: "/super-admin/prescriptions",
     method: "get",
@@ -127,13 +123,9 @@ export const operations = {
     path: "/super-admin/prescriptions/:id",
     method: "get",
   },
-  "get_super-admin-prescriptions-doctor-doctorid": {
-    path: "/super-admin/prescriptions/doctor/:doctorId",
-    method: "get",
-  },
-  "get_super-admin-prescriptions-patient-patientid": {
-    path: "/super-admin/prescriptions/patient/:patientId",
-    method: "get",
+  "delete_super-admin-prescriptions-id": {
+    path: "/super-admin/prescriptions/:id",
+    method: "delete",
   },
   "get_farmers-prescriptions": {
     path: "/farmers/prescriptions",

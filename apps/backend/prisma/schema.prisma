@@ -215,7 +215,6 @@ model Prescription {
     
     // Consultation Details
     consultancyFee Float?
-    date        DateTime @default(now())
     followUpDate DateTime?
     
     createdAt   DateTime @default(now())

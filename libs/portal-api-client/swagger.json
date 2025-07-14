@@ -2204,42 +2204,8 @@
         "x-samchon-controller": "PrescriptionController"
       }
     },
-    "/prescription/{id}/pdf": {
-      "get": {
-        "summary": "Download prescription as PDF (Admin only - own prescriptions)",
-        "description": "Download prescription as PDF",
-        "tags": ["Prescription"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {}
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "x-samchon-accessor": ["prescription", "pdf", "downloadPdf"],
-        "x-samchon-controller": "PrescriptionController"
-      }
-    },
     "/super-admin/prescriptions": {
       "get": {
-        "summary": "Get all prescriptions in the system (Super Admin only)",
-        "description": "Get all prescriptions",
         "tags": ["Super Admin Prescriptions"],
         "parameters": [
           {
@@ -2365,8 +2331,6 @@
     },
     "/super-admin/prescriptions/{id}": {
       "get": {
-        "summary": "Get a specific prescription by ID (Super Admin only)",
-        "description": "Get prescription by ID",
         "tags": ["Super Admin Prescriptions"],
         "parameters": [
           {
@@ -2397,120 +2361,17 @@
         ],
         "x-samchon-accessor": ["super_admin", "prescriptions", "findOne"],
         "x-samchon-controller": "SuperAdminPrescriptionController"
-      }
-    },
-    "/super-admin/prescriptions/doctor/{doctorId}": {
-      "get": {
-        "summary": "Get prescriptions created by a specific doctor (Super Admin only)",
-        "description": "Get prescriptions by doctor",
+      },
+      "delete": {
         "tags": ["Super Admin Prescriptions"],
         "parameters": [
           {
-            "name": "doctorId",
+            "name": "id",
             "in": "path",
             "schema": {
               "type": "string"
             },
             "required": true
-          },
-          {
-            "name": "doctorId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "patientId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "animalType",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "startDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": false
-          },
-          {
-            "name": "endDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": false
-          },
-          {
-            "name": "hasFollowUp",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            },
-            "required": false
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "minimum": 1
-            },
-            "required": false
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "minimum": 1
-            },
-            "required": false
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "schema": {
-              "oneOf": [
-                {
-                  "const": "asc"
-                },
-                {
-                  "const": "desc"
-                }
-              ]
-            },
-            "required": false
           }
         ],
         "responses": {
@@ -2519,7 +2380,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
+                  "type": "boolean"
                 }
               }
             }
@@ -2533,148 +2394,7 @@
         "x-samchon-accessor": [
           "super_admin",
           "prescriptions",
-          "doctor",
-          "findByDoctor"
-        ],
-        "x-samchon-controller": "SuperAdminPrescriptionController"
-      }
-    },
-    "/super-admin/prescriptions/patient/{patientId}": {
-      "get": {
-        "summary": "Get prescriptions for a specific patient (Super Admin only)",
-        "description": "Get prescriptions by patient",
-        "tags": ["Super Admin Prescriptions"],
-        "parameters": [
-          {
-            "name": "patientId",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "doctorId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "patientId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "animalType",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "startDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": false
-          },
-          {
-            "name": "endDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": false
-          },
-          {
-            "name": "hasFollowUp",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            },
-            "required": false
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "minimum": 1
-            },
-            "required": false
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "minimum": 1
-            },
-            "required": false
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "schema": {
-              "oneOf": [
-                {
-                  "const": "asc"
-                },
-                {
-                  "const": "desc"
-                }
-              ]
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "x-samchon-accessor": [
-          "super_admin",
-          "prescriptions",
-          "patient",
-          "findByPatient"
+          "deletePrescriptionById"
         ],
         "x-samchon-controller": "SuperAdminPrescriptionController"
       }
@@ -3842,10 +3562,6 @@
           "consultancyFee": {
             "type": "number"
           },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
           "followUpDate": {
             "type": "string",
             "format": "date-time"
@@ -3869,7 +3585,6 @@
           "animalType",
           "patientNumber",
           "medications",
-          "date",
           "createdAt",
           "updatedAt"
         ]
@@ -3958,95 +3673,201 @@
         "type": "object",
         "properties": {
           "patientId": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "animalType": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "animalPicture": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "patientNumber": {
-            "type": "number",
-            "minimum": 0
+            "type": "number"
           },
           "age": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "sex": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "weight": {
-            "type": "number",
-            "minimum": 0
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ]
           },
           "temperature": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "spo2": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "respirationRate": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "fecesStatus": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "nasalSecretion": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "feedingHistory": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "medicationHistory": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "investigation": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "medications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MedicationDto"
-            }
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "$ref": "#/components/schemas/JsonArray"
+              },
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              }
+            ]
           },
           "advice": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "consultancyFee": {
-            "type": "number",
-            "minimum": 0
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ]
           },
           "followUpDate": {
             "type": "string",
             "format": "date-time"
           }
         },
-        "required": ["patientId", "animalType", "medications"]
-      },
-      "MedicationDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "dosage": {
-            "type": "string",
-            "minLength": 1
-          },
-          "instructions": {
-            "type": "string",
-            "minLength": 1
-          },
-          "duration": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "required": ["name", "dosage", "instructions", "duration"]
+        "required": [
+          "patientId",
+          "animalType",
+          "animalPicture",
+          "patientNumber",
+          "age",
+          "sex",
+          "weight",
+          "temperature",
+          "spo2",
+          "respirationRate",
+          "fecesStatus",
+          "nasalSecretion",
+          "feedingHistory",
+          "medicationHistory",
+          "investigation",
+          "medications",
+          "advice",
+          "consultancyFee"
+        ]
       },
       "PaginatedDtoPatientInfoResponseDto": {
         "type": "object",
@@ -4099,10 +3920,6 @@
           "consultancyFee": {
             "type": "number"
           },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
           "followUpDate": {
             "type": "string",
             "format": "date-time"
@@ -4118,7 +3935,6 @@
           "doctorName",
           "patientName",
           "animalType",
-          "date",
           "createdAt"
         ]
       },
@@ -4175,70 +3991,202 @@
       "UpdatePrescriptionDto": {
         "type": "object",
         "properties": {
+          "patientId": {
+            "type": "string"
+          },
           "animalType": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "animalPicture": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "patientNumber": {
-            "type": "number",
-            "minimum": 0
+            "type": "number"
           },
           "age": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "sex": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "weight": {
-            "type": "number",
-            "minimum": 0
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ]
           },
           "temperature": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "spo2": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "respirationRate": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "fecesStatus": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "nasalSecretion": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "feedingHistory": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "medicationHistory": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "investigation": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "medications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MedicationDto"
-            }
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "$ref": "#/components/schemas/JsonArray"
+              },
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              }
+            ]
           },
           "advice": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "consultancyFee": {
-            "type": "number",
-            "minimum": 0
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "number"
+              }
+            ]
           },
           "followUpDate": {
             "type": "string",
             "format": "date-time"
           }
         },
-        "required": []
+        "required": [
+          "patientId",
+          "animalType",
+          "animalPicture",
+          "patientNumber",
+          "age",
+          "sex",
+          "weight",
+          "temperature",
+          "spo2",
+          "respirationRate",
+          "fecesStatus",
+          "nasalSecretion",
+          "feedingHistory",
+          "medicationHistory",
+          "investigation",
+          "medications",
+          "advice",
+          "consultancyFee"
+        ]
       }
     },
     "securitySchemes": {

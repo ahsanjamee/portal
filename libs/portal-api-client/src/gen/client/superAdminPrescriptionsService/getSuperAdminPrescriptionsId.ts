@@ -6,8 +6,6 @@ import type {
 } from "../../types/GetSuperAdminPrescriptionsId";
 
 /**
- * @description Get prescription by ID
- * @summary Get a specific prescription by ID (Super Admin only)
  * @link /super-admin/prescriptions/:id
  */
 export async function getSuperAdminPrescriptionsId(

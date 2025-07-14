@@ -1,43 +1,29 @@
 
-import { makeQuery, makeMutation } from '@/lib/makeQuery/makeQuery';
-import {
-    prescriptionService as prescriptionApiService,
-    userPrescriptionsService as userPrescriptionsApiService,
-    superAdminPrescriptionsService as superAdminPrescriptionsApiService
-} from '@portal/portal-api-client';
+import { makeMutation, makeQuery } from '@/lib/makeQuery/makeQuery';
 import type {
-    GetPrescriptionQueryParams,
-    GetPrescriptionQueryResponse,
+    DeletePrescriptionIdMutationResponse,
+    GetFarmersPrescriptionsIdQueryResponse,
+    GetFarmersPrescriptionsQueryParams,
+    GetFarmersPrescriptionsQueryResponse,
     GetPrescriptionIdQueryResponse,
     GetPrescriptionPatientsQueryParams,
     GetPrescriptionPatientsQueryResponse,
+    GetSuperAdminPrescriptionsIdQueryResponse,
     PostPrescriptionMutationRequest,
     PostPrescriptionMutationResponse,
     PutPrescriptionIdMutationRequest,
-    PutPrescriptionIdMutationResponse,
-    DeletePrescriptionIdMutationResponse,
-    GetFarmersPrescriptionsQueryParams,
-    GetFarmersPrescriptionsQueryResponse,
-    GetFarmersPrescriptionsIdQueryResponse,
-    GetSuperAdminPrescriptionsQueryParams,
-    GetSuperAdminPrescriptionsQueryResponse,
-    GetSuperAdminPrescriptionsIdQueryResponse,
-    GetSuperAdminPrescriptionsPatientPatientidQueryParams,
-    GetSuperAdminPrescriptionsPatientPatientidQueryResponse,
-    GetSuperAdminPrescriptionsDoctorDoctoridQueryParams,
-    GetSuperAdminPrescriptionsDoctorDoctoridQueryResponse,
+    PutPrescriptionIdMutationResponse
 } from '@portal/portal-api-client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+    prescriptionService as prescriptionApiService,
+    superAdminPrescriptionsService as superAdminPrescriptionsApiService,
+    userPrescriptionsService as userPrescriptionsApiService
+} from '@portal/portal-api-client';
+import { useQuery } from '@tanstack/react-query';
 
 export const prescriptionServiceHooks = {
     // Get all prescriptions (paginated)
-    useGetPrescriptions: makeQuery<
-        GetPrescriptionQueryResponse,
-        [GetPrescriptionQueryParams?]
-    >(
-        (params) => prescriptionApiService.getPrescription(params),
-        ['prescriptions']
-    ),
+    useGetPrescriptions: makeQuery(prescriptionApiService.getPrescription, 'replace'),
 
     // Get prescription by ID
     useGetPrescription: (id: string, options?: any) => {
@@ -81,16 +67,7 @@ export const prescriptionServiceHooks = {
         (id) => prescriptionApiService.deletePrescriptionId(id)
     ),
 
-    // Generate PDF
-    usePrescriptionPdf: () => {
-        return useMutation({
-            mutationFn: async (id: string) => {
-                return prescriptionApiService.getPrescriptionIdPdf(id, {
-                    responseType: 'blob'
-                });
-            },
-        });
-    },
+
 } as const;
 
 export const userPrescriptionServiceHooks = {
@@ -115,40 +92,23 @@ export const userPrescriptionServiceHooks = {
 
 export const superAdminPrescriptionServiceHooks = {
     // Get all prescriptions (super admin view)
-    useGetSuperAdminPrescriptions: makeQuery<
-        GetSuperAdminPrescriptionsQueryResponse,
-        [GetSuperAdminPrescriptionsQueryParams?]
+    useGetSuperAdminPrescriptions: makeQuery(superAdminPrescriptionsApiService.getSuperAdminPrescriptions, 'replace'),
+
+    useGetSuperAdminPrescription: (id: string, options?: any) => {
+        return useQuery<GetSuperAdminPrescriptionsIdQueryResponse>({
+            queryKey: ['super-admin', 'prescription', id],
+            queryFn: () => superAdminPrescriptionsApiService.getSuperAdminPrescriptionsId(id),
+            ...options,
+        });
+    },
+
+    useDeletePrescriptionFromSuperAdmin: makeMutation<
+        Boolean,
+        string
     >(
-        (params) => superAdminPrescriptionsApiService.getSuperAdminPrescriptions(params),
-        ['super-admin', 'prescriptions']
+        (id) => superAdminPrescriptionsApiService.deleteSuperAdminPrescriptionsId(id)
     ),
 
-    // Get prescription by ID (super admin view)
-    useGetSuperAdminPrescription: makeQuery<
-        GetSuperAdminPrescriptionsIdQueryResponse,
-        [string]
-    >(
-        (id) => superAdminPrescriptionsApiService.getSuperAdminPrescriptionsId(id),
-        ['super-admin', 'prescription']
-    ),
-
-    // Get prescriptions by patient ID
-    useGetSuperAdminPrescriptionsByPatient: makeQuery<
-        GetSuperAdminPrescriptionsPatientPatientidQueryResponse,
-        [string, GetSuperAdminPrescriptionsPatientPatientidQueryParams?]
-    >(
-        (patientId, params) => superAdminPrescriptionsApiService.getSuperAdminPrescriptionsPatientPatientid(patientId, params),
-        ['super-admin', 'prescriptions', 'patient']
-    ),
-
-    // Get prescriptions by doctor ID
-    useGetSuperAdminPrescriptionsByDoctor: makeQuery<
-        GetSuperAdminPrescriptionsDoctorDoctoridQueryResponse,
-        [string, GetSuperAdminPrescriptionsDoctorDoctoridQueryParams?]
-    >(
-        (doctorId, params) => superAdminPrescriptionsApiService.getSuperAdminPrescriptionsDoctorDoctorid(doctorId, params),
-        ['super-admin', 'prescriptions', 'doctor']
-    ),
 } as const;
 
 // Export a combined service object for convenience

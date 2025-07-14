@@ -245,6 +245,14 @@ const components = {
       })),
     name: "PrescriptionIndexLazy",
   }),
+
+  SuperAdminPrescriptionIndexLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/prescription/SuperAdminPrescriptionIndex").then((m) => ({
+        default: m.SuperAdminPrescriptionIndex,
+      })),
+    name: "SuperAdminPrescriptionIndexLazy",
+  }),
 };
 
 export const Routes = () => {
@@ -346,6 +354,10 @@ export const Routes = () => {
             {
               path: "/super-admin/sms-stats",
               Component: components.SmsStatsIndexLazy,
+            },
+            {
+              path: "/super-admin/prescriptions",
+              Component: components.SuperAdminPrescriptionIndexLazy,
             },
           ],
         },

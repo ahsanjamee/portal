@@ -14,7 +14,6 @@ import {
     PrescriptionResponseDto,
     UpdatePrescriptionDto
 } from './dto';
-import { PrescriptionPdfService } from './pdf.service';
 import { PrescriptionService } from './prescription.service';
 
 @Controller('prescription')
@@ -24,7 +23,6 @@ import { PrescriptionService } from './prescription.service';
 export class PrescriptionController {
     constructor(
         private readonly prescriptionService: PrescriptionService,
-        private readonly pdfService: PrescriptionPdfService
     ) { }
 
     /**
@@ -141,32 +139,5 @@ export class PrescriptionController {
 
         await this.prescriptionService.remove(id, adminProfile.id);
         return { message: 'Prescription deleted successfully' };
-    }
-
-    /**
-     * Download prescription as PDF
-     * @summary Download prescription as PDF (Admin only - own prescriptions)
-     */
-    @TypedRoute.Get(':id/pdf')
-    async downloadPdf(
-        @TypedParam('id') id: string,
-        @User() user: TokenPayload,
-        @Res() res: Response
-    ): Promise<void> {
-        const prescription = await this.prescriptionService.findOne(id);
-
-        const adminProfile = await this.prescriptionService['prisma'].adminUserProfile.findUnique({
-            where: { userId: user.sub }
-        });
-
-        if (!adminProfile || prescription.doctorId !== adminProfile.id) {
-            throw new Error('Unauthorized to download this prescription');
-        }
-
-        const pdfBuffer = await this.pdfService.generatePrescriptionPdf(prescription);
-
-        res.setHeader('Content-Type', 'text/html');
-        res.setHeader('Content-Disposition', `attachment; filename="prescription_${prescription.reference}.html"`);
-        res.send(pdfBuffer);
     }
 } 

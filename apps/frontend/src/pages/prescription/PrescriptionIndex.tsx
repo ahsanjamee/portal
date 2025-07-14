@@ -50,18 +50,22 @@ export const PrescriptionIndex: React.FC = () => {
     pageSize: 10,
   });
 
+  const params = {
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+    search: globalFilter,
+    sortBy: sorting[0]?.id,
+    sort: sorting[0]?.desc ? "desc" : ("asc" as "desc" | "asc" | undefined),
+  };
+
   // Fetch prescriptions using the service
   const {
     data: prescriptionsData,
     isLoading: prescriptionsLoading,
     error: prescriptionsError,
     refetch: refetchPrescriptions,
-  } = prescriptionServiceHooks.useGetPrescriptions({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    search: globalFilter,
-    sortBy: sorting[0]?.id,
-    sort: sorting[0]?.desc ? "desc" : "asc",
+  } = prescriptionServiceHooks.useGetPrescriptions(params, undefined, {
+    queryKey: ["prescriptions", params],
   });
 
   // Fetch patients for the form using the service

@@ -15,7 +15,6 @@ interface PrescriptionListItem {
   patientName: string;
   animalType: string;
   consultancyFee?: number;
-  date: string;
   followUpDate?: string;
   createdAt: string;
 }
@@ -100,15 +99,7 @@ export const PrescriptionList: React.FC<PrescriptionListProps> = ({
         return fee ? `৳${fee.toLocaleString()}` : "-";
       },
     },
-    {
-      accessorKey: "date",
-      header: "Date",
-      size: 120,
-      Cell: ({ cell }) => {
-        const date = cell.getValue<string>();
-        return format(new Date(date), "dd/MM/yyyy");
-      },
-    },
+
     {
       accessorKey: "followUpDate",
       header: "Follow-up",

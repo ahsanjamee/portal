@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Select as MantineSelect } from "@mantine/core";
 import { Textarea } from "@/components/ui/textarea";
 import UploadImage from "@/components/ui/UploadImage";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,10 +32,10 @@ const prescriptionSchema = z.object({
   patientId: z.string().min(1, "Patient selection is required"),
   animalType: z.string().min(1, "Animal type is required"),
   animalPicture: z.string().optional(),
-  patientNumber: z.number().min(0).optional(),
+  patientNumber: z.number().min(0).nullable().optional(),
   age: z.string().optional(),
   sex: z.string().optional(),
-  weight: z.number().min(0).optional(),
+  weight: z.number().min(0).nullable().optional(),
 
   // Vital Signs
   temperature: z.string().optional(),
@@ -55,7 +56,7 @@ const prescriptionSchema = z.object({
   advice: z.string().optional(),
 
   // Consultation Details
-  consultancyFee: z.number().min(0).optional(),
+  consultancyFee: z.number().min(0).nullable().optional(),
   followUpDate: z.date().optional(),
 });
 
@@ -147,7 +148,25 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
   }, [isEditMode, initialData, setValue, initialData?.id]);
 
   const handleFormSubmit = (data: PrescriptionFormData) => {
-    onSubmit({ ...data, animalPicture: data.animalPicture ?? "" });
+    onSubmit({
+      ...data,
+      animalPicture: data.animalPicture ?? "",
+      age: data.age ?? "",
+      weight: data.weight ?? null,
+      patientNumber: data.patientNumber ?? null,
+      consultancyFee: data.consultancyFee ?? null,
+      sex: data.sex ?? "",
+      temperature: data.temperature ?? "",
+      spo2: data.spo2 ?? "",
+      respirationRate: data.respirationRate ?? "",
+      fecesStatus: data.fecesStatus ?? "",
+      nasalSecretion: data.nasalSecretion ?? "",
+      feedingHistory: data.feedingHistory ?? "",
+      medicationHistory: data.medicationHistory ?? "",
+      investigation: data.investigation ?? "",
+      advice: data.advice ?? "",
+      followUpDate: data.followUpDate ?? undefined,
+    });
   };
 
   const addMedication = () => {
@@ -185,21 +204,17 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                     name="patientId"
                     control={control}
                     render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a patient" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {patients.map((patient) => (
-                            <SelectItem key={patient.id} value={patient.id}>
-                              {patient.name} - {patient.userType}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <MantineSelect
+                        placeholder="Select a patient"
+                        data={patients.map((patient) => ({
+                          value: patient.id,
+                          label: `${patient.name} - (${patient.mobileNumber})`,
+                        }))}
+                        {...field}
+                        onChange={(value) => field.onChange(value)}
+                        searchable
+                        clearable={false}
+                      />
                     )}
                   />
                   {errors.patientId && (
@@ -276,6 +291,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                         <Input
                           type="number"
                           {...field}
+                          value={field.value ?? ""}
                           onChange={(e) =>
                             field.onChange(Number(e.target.value))
                           }
@@ -332,6 +348,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                             field.onChange(Number(e.target.value))
                           }
                           placeholder="Enter weight"
+                          value={field.value ?? ""}
                         />
                       )}
                     />
@@ -611,6 +628,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                             field.onChange(Number(e.target.value))
                           }
                           placeholder="Enter consultation fee"
+                          value={field.value ?? ""}
                         />
                       )}
                     />

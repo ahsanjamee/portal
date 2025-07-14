@@ -1,15 +1,16 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { TypedRoute, TypedParam, TypedQuery } from '@nestia/core';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { TypedParam, TypedQuery, TypedRoute } from '@nestia/core';
+import { Controller, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PaginatedDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../libs/auth/jwt.guard';
 import { SuperAdminRoleGuard } from '../libs/guards/role.guard';
-import { PrescriptionService } from './prescription.service';
 import {
+    PrescriptionListResponseDto,
     PrescriptionQueryDto,
-    PrescriptionResponseDto,
-    PrescriptionListResponseDto
+    PrescriptionResponseDto
 } from './dto';
-import { PaginatedDto } from '../common/dto/pagination.dto';
+import { PrescriptionService } from './prescription.service';
+import { BooleanType } from 'src/common';
 
 @Controller('super-admin/prescriptions')
 @ApiTags('Super Admin Prescriptions')
@@ -18,10 +19,6 @@ import { PaginatedDto } from '../common/dto/pagination.dto';
 export class SuperAdminPrescriptionController {
     constructor(private readonly prescriptionService: PrescriptionService) { }
 
-    /**
-     * Get all prescriptions
-     * @summary Get all prescriptions in the system (Super Admin only)
-     */
     @TypedRoute.Get()
     async findAll(
         @TypedQuery() query: PrescriptionQueryDto
@@ -29,10 +26,6 @@ export class SuperAdminPrescriptionController {
         return this.prescriptionService.findAll(query);
     }
 
-    /**
-     * Get prescription by ID
-     * @summary Get a specific prescription by ID (Super Admin only)
-     */
     @TypedRoute.Get(':id')
     async findOne(
         @TypedParam('id') id: string
@@ -40,27 +33,10 @@ export class SuperAdminPrescriptionController {
         return this.prescriptionService.findOne(id);
     }
 
-    /**
-     * Get prescriptions by doctor
-     * @summary Get prescriptions created by a specific doctor (Super Admin only)
-     */
-    @TypedRoute.Get('doctor/:doctorId')
-    async findByDoctor(
-        @TypedParam('doctorId') doctorId: string,
-        @TypedQuery() query: PrescriptionQueryDto
-    ): Promise<PaginatedDto<PrescriptionListResponseDto>> {
-        return this.prescriptionService.findByDoctor(doctorId, query);
-    }
-
-    /**
-     * Get prescriptions by patient
-     * @summary Get prescriptions for a specific patient (Super Admin only)
-     */
-    @TypedRoute.Get('patient/:patientId')
-    async findByPatient(
-        @TypedParam('patientId') patientId: string,
-        @TypedQuery() query: PrescriptionQueryDto
-    ): Promise<PaginatedDto<PrescriptionListResponseDto>> {
-        return this.prescriptionService.findByPatient(patientId, query);
+    @TypedRoute.Delete(':id')
+    async deletePrescriptionById(
+        @TypedParam('id') id: string
+    ): Promise<BooleanType> {
+        return this.prescriptionService.deletePrescriptionById(id);
     }
 } 

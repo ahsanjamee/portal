@@ -1,4 +1,5 @@
-import type { MedicationDto } from "./MedicationDto";
+import type { JsonArray } from "./JsonArray";
+import type { JsonObject } from "./JsonObject";
 
 export type CreatePrescriptionDto = {
   /**
@@ -9,70 +10,25 @@ export type CreatePrescriptionDto = {
    * @type string
    */
   animalType: string;
+  animalPicture: null | string;
   /**
-   * @type string | undefined
+   * @type number
    */
-  animalPicture?: string;
-  /**
-   * @type number | undefined
-   */
-  patientNumber?: number;
-  /**
-   * @type string | undefined
-   */
-  age?: string;
-  /**
-   * @type string | undefined
-   */
-  sex?: string;
-  /**
-   * @type number | undefined
-   */
-  weight?: number;
-  /**
-   * @type string | undefined
-   */
-  temperature?: string;
-  /**
-   * @type string | undefined
-   */
-  spo2?: string;
-  /**
-   * @type string | undefined
-   */
-  respirationRate?: string;
-  /**
-   * @type string | undefined
-   */
-  fecesStatus?: string;
-  /**
-   * @type string | undefined
-   */
-  nasalSecretion?: string;
-  /**
-   * @type string | undefined
-   */
-  feedingHistory?: string;
-  /**
-   * @type string | undefined
-   */
-  medicationHistory?: string;
-  /**
-   * @type string | undefined
-   */
-  investigation?: string;
-  /**
-   * @type array
-   */
-  medications: MedicationDto[];
-  /**
-   * @type string | undefined
-   */
-  advice?: string;
-  /**
-   * @type number | undefined
-   */
-  consultancyFee?: number;
+  patientNumber: number;
+  age: null | string;
+  sex: null | string;
+  weight: null | number;
+  temperature: null | string;
+  spo2: null | string;
+  respirationRate: null | string;
+  fecesStatus: null | string;
+  nasalSecretion: null | string;
+  feedingHistory: null | string;
+  medicationHistory: null | string;
+  investigation: null | string;
+  medications: null | string | number | boolean | JsonArray | JsonObject;
+  advice: null | string;
+  consultancyFee: null | number;
   /**
    * @type string | undefined, date-time
    */

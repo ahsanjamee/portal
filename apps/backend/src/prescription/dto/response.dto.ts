@@ -66,7 +66,6 @@ export interface PrescriptionResponseDto {
 
     // Consultation Details
     consultancyFee?: number;
-    date: string & tags.Format<"date-time">;
     followUpDate?: string & tags.Format<"date-time">;
 
     createdAt: string & tags.Format<"date-time">;
@@ -80,7 +79,6 @@ export interface PrescriptionListResponseDto {
     patientName: string;
     animalType: string;
     consultancyFee?: number;
-    date: string & tags.Format<"date-time">;
     followUpDate?: string & tags.Format<"date-time">;
     createdAt: string & tags.Format<"date-time">;
 } 

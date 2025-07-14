@@ -13,7 +13,7 @@ import type {
  */
 export async function putPrescriptionId(
   id: PutPrescriptionIdPathParams["id"],
-  data?: PutPrescriptionIdMutationRequest,
+  data: PutPrescriptionIdMutationRequest,
   options: Partial<Parameters<typeof client>[0]> = {},
 ): Promise<ResponseConfig<PutPrescriptionIdMutationResponse>> {
   const res = await client<

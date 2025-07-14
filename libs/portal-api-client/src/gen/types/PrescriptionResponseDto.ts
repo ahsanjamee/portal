@@ -96,10 +96,6 @@ export type PrescriptionResponseDto = {
    */
   consultancyFee?: number;
   /**
-   * @type string, date-time
-   */
-  date: string;
-  /**
    * @type string | undefined, date-time
    */
   followUpDate?: string;
