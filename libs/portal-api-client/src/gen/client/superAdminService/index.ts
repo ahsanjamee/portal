@@ -6,3 +6,4 @@ export * from "./getSuperAdminSmsStats";
 export * from "./getSuperAdminSmsStatsSummary";
 export * from "./patchSuperAdminAdminsIdStatus";
 export * from "./patchSuperAdminEndUsersIdStatus";
+export * from "./postSuperAdminExportUsers";

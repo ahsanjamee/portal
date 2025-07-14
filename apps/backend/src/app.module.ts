@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { SmsModule } from './libs/sms/sms.module';
 import { AuthModule } from './libs/auth/auth.module';
+import { PrescriptionModule } from './prescription/prescription.module';
 import { JwtAuthGuard } from './libs/auth/jwt.guard';
 
 @Module({
@@ -25,6 +26,7 @@ import { JwtAuthGuard } from './libs/auth/jwt.guard';
         SuperAdminModule,
         UserModule,
         SmsModule,
+        PrescriptionModule,
     ],
 
     providers: [

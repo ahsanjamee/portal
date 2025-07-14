@@ -1,0 +1,23 @@
+import client from "@/client";
+import type { ResponseConfig } from "@/client";
+import type {
+  GetSuperAdminPrescriptionsIdQueryResponse,
+  GetSuperAdminPrescriptionsIdPathParams,
+} from "../../types/GetSuperAdminPrescriptionsId";
+
+/**
+ * @description Get prescription by ID
+ * @summary Get a specific prescription by ID (Super Admin only)
+ * @link /super-admin/prescriptions/:id
+ */
+export async function getSuperAdminPrescriptionsId(
+  id: GetSuperAdminPrescriptionsIdPathParams["id"],
+  options: Partial<Parameters<typeof client>[0]> = {},
+): Promise<ResponseConfig<GetSuperAdminPrescriptionsIdQueryResponse>> {
+  const res = await client<GetSuperAdminPrescriptionsIdQueryResponse>({
+    method: "get",
+    url: `/super-admin/prescriptions/${id}`,
+    ...options,
+  });
+  return res;
+}

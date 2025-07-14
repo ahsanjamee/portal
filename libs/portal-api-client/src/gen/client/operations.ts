@@ -31,6 +31,10 @@ export const operations = {
     path: "/super-admin/sms-stats/summary",
     method: "get",
   },
+  "post_super-admin-export-users": {
+    path: "/super-admin/export/users",
+    method: "post",
+  },
   "post_user-register-end-user": {
     path: "/user/register/end-user",
     method: "post",
@@ -86,5 +90,57 @@ export const operations = {
   "put_user-profile-image": {
     path: "/user/profile/image",
     method: "put",
+  },
+  post_prescription: {
+    path: "/prescription",
+    method: "post",
+  },
+  get_prescription: {
+    path: "/prescription",
+    method: "get",
+  },
+  "get_prescription-patients": {
+    path: "/prescription/patients",
+    method: "get",
+  },
+  "get_prescription-id": {
+    path: "/prescription/:id",
+    method: "get",
+  },
+  "put_prescription-id": {
+    path: "/prescription/:id",
+    method: "put",
+  },
+  "delete_prescription-id": {
+    path: "/prescription/:id",
+    method: "delete",
+  },
+  "get_prescription-id-pdf": {
+    path: "/prescription/:id/pdf",
+    method: "get",
+  },
+  "get_super-admin-prescriptions": {
+    path: "/super-admin/prescriptions",
+    method: "get",
+  },
+  "get_super-admin-prescriptions-id": {
+    path: "/super-admin/prescriptions/:id",
+    method: "get",
+  },
+  "get_super-admin-prescriptions-doctor-doctorid": {
+    path: "/super-admin/prescriptions/doctor/:doctorId",
+    method: "get",
+  },
+  "get_super-admin-prescriptions-patient-patientid": {
+    path: "/super-admin/prescriptions/patient/:patientId",
+    method: "get",
+  },
+  "get_farmers-prescriptions": {
+    path: "/farmers/prescriptions",
+    method: "get",
+  },
+  "get_farmers-prescriptions-id": {
+    path: "/farmers/prescriptions/:id",
+    method: "get",
   },
 } as const;

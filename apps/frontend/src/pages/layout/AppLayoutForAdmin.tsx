@@ -3,7 +3,7 @@ import { useGlobalStore } from "@/stores/global.store";
 import NiceModal from "@ebay/nice-modal-react";
 import { AppShell, Burger, Group, NavLink, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { UserIcon } from "@phosphor-icons/react";
+import { UserIcon, Receipt } from "@phosphor-icons/react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PrimaryTopbar } from "./topbar/PrimaryTopbar";
 
@@ -18,6 +18,11 @@ export const AppLayoutForAdmin = () => {
       label: "Profile",
       to: "/admin/profile",
       icon: <UserIcon size={20} weight="fill" color="#859992" />,
+    },
+    {
+      label: "Prescriptions",
+      to: "/admin/prescriptions",
+      icon: <Receipt size={20} weight="fill" color="#859992" />,
     },
   ];
 

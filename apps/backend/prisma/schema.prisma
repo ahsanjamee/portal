@@ -145,6 +145,9 @@ model EndUserProfile {
     
     user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     
+    // Relations
+    prescriptions Prescription[]
+    
     @@map("end_user_profiles")
 }
 
@@ -167,5 +170,58 @@ model AdminUserProfile {
     
     user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     
+    // Relations
+    prescriptions Prescription[]
+    
     @@map("admin_user_profiles")
 }
+
+// Prescription model for livestock care
+model Prescription {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    reference   String   // Patient reference number
+    
+    // Doctor Information
+    doctorId    String   @db.ObjectId
+    doctor      AdminUserProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+    
+    // Patient Information
+    patientId   String   @db.ObjectId
+    patient     EndUserProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+    
+    // Animal Information
+    animalType  String   // Calf, Cow, etc.
+    animalPicture String?
+    patientNumber Int    @default(0)
+    age         String?
+    sex         String?  // M/F
+    weight      Float?   // in kg
+    
+    // Vital Signs
+    temperature String?  // Normal, fever, etc.
+    spo2        String?  // Oxygen saturation
+    respirationRate String? // Normal, fast, slow
+    fecesStatus String?  // Normal, diarrhea, etc.
+    nasalSecretion String? // Normal, runny, etc.
+    feedingHistory String? // Grass, straw, mixed feed
+    
+    // Medical History
+    medicationHistory String? // Previous medications
+    investigation String?    // Any investigations done
+    
+    // Prescription Details
+    medications Json     // Array of medications with dosage and instructions
+    advice      String?  // Doctor's advice
+    
+    // Consultation Details
+    consultancyFee Float?
+    date        DateTime @default(now())
+    followUpDate DateTime?
+    
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    
+    @@map("prescriptions")
+}
+
+

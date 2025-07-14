@@ -237,6 +237,14 @@ const components = {
       })),
     name: "AdminProfileLazy",
   }),
+
+  PrescriptionIndexLazy: LazyFactory({
+    factory: () =>
+      import("@/pages/prescription/PrescriptionIndex").then((m) => ({
+        default: m.PrescriptionIndex,
+      })),
+    name: "PrescriptionIndexLazy",
+  }),
 };
 
 export const Routes = () => {
@@ -270,6 +278,10 @@ export const Routes = () => {
                 {
                   path: "/admin/profile",
                   Component: components.AdminProfileLazy,
+                },
+                {
+                  path: "/admin/prescriptions",
+                  Component: components.PrescriptionIndexLazy,
                 },
               ],
             },

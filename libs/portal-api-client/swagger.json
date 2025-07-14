@@ -537,6 +537,27 @@
         "x-samchon-controller": "SuperAdminController"
       }
     },
+    "/super-admin/export/users": {
+      "post": {
+        "tags": ["Super Admin"],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "x-samchon-accessor": [
+          "super_admin",
+          "$export",
+          "users",
+          "exportEndUsers"
+        ],
+        "x-samchon-controller": "SuperAdminController"
+      }
+    },
     "/user/register/end-user": {
       "post": {
         "summary": "Register a new end user (dairy, poultry, fish, or agriculture farmer) and send OTP",
@@ -1823,6 +1844,1007 @@
         ],
         "x-samchon-controller": "ProfileController"
       }
+    },
+    "/prescription": {
+      "post": {
+        "summary": "Create a new prescription (Admin only)",
+        "description": "Create a new prescription",
+        "tags": ["Prescription"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePrescriptionDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "create"],
+        "x-samchon-controller": "PrescriptionController"
+      },
+      "get": {
+        "summary": "Get all prescriptions created by the current admin",
+        "description": "Get all prescriptions for the current admin",
+        "tags": ["Prescription"],
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "patientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "animalType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "hasFollowUp",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "findAll"],
+        "x-samchon-controller": "PrescriptionController"
+      }
+    },
+    "/prescription/patients": {
+      "get": {
+        "summary": "Get all end users for patient selection in prescription form",
+        "description": "Get all patients (end users) for prescription form",
+        "tags": ["Prescription"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoPatientInfoResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "patients", "getPatients"],
+        "x-samchon-controller": "PrescriptionController"
+      }
+    },
+    "/prescription/{id}": {
+      "get": {
+        "summary": "Get a specific prescription by ID",
+        "description": "Get prescription by ID",
+        "tags": ["Prescription"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "findOne"],
+        "x-samchon-controller": "PrescriptionController"
+      },
+      "put": {
+        "summary": "Update a prescription (Admin only - own prescriptions)",
+        "description": "Update prescription",
+        "tags": ["Prescription"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePrescriptionDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "update"],
+        "x-samchon-controller": "PrescriptionController"
+      },
+      "delete": {
+        "summary": "Delete a prescription (Admin only - own prescriptions)",
+        "description": "Delete prescription",
+        "tags": ["Prescription"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message"]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "remove"],
+        "x-samchon-controller": "PrescriptionController"
+      }
+    },
+    "/prescription/{id}/pdf": {
+      "get": {
+        "summary": "Download prescription as PDF (Admin only - own prescriptions)",
+        "description": "Download prescription as PDF",
+        "tags": ["Prescription"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["prescription", "pdf", "downloadPdf"],
+        "x-samchon-controller": "PrescriptionController"
+      }
+    },
+    "/super-admin/prescriptions": {
+      "get": {
+        "summary": "Get all prescriptions in the system (Super Admin only)",
+        "description": "Get all prescriptions",
+        "tags": ["Super Admin Prescriptions"],
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "patientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "animalType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "hasFollowUp",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["super_admin", "prescriptions", "findAll"],
+        "x-samchon-controller": "SuperAdminPrescriptionController"
+      }
+    },
+    "/super-admin/prescriptions/{id}": {
+      "get": {
+        "summary": "Get a specific prescription by ID (Super Admin only)",
+        "description": "Get prescription by ID",
+        "tags": ["Super Admin Prescriptions"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["super_admin", "prescriptions", "findOne"],
+        "x-samchon-controller": "SuperAdminPrescriptionController"
+      }
+    },
+    "/super-admin/prescriptions/doctor/{doctorId}": {
+      "get": {
+        "summary": "Get prescriptions created by a specific doctor (Super Admin only)",
+        "description": "Get prescriptions by doctor",
+        "tags": ["Super Admin Prescriptions"],
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "doctorId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "patientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "animalType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "hasFollowUp",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "super_admin",
+          "prescriptions",
+          "doctor",
+          "findByDoctor"
+        ],
+        "x-samchon-controller": "SuperAdminPrescriptionController"
+      }
+    },
+    "/super-admin/prescriptions/patient/{patientId}": {
+      "get": {
+        "summary": "Get prescriptions for a specific patient (Super Admin only)",
+        "description": "Get prescriptions by patient",
+        "tags": ["Super Admin Prescriptions"],
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "doctorId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "patientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "animalType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "hasFollowUp",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "super_admin",
+          "prescriptions",
+          "patient",
+          "findByPatient"
+        ],
+        "x-samchon-controller": "SuperAdminPrescriptionController"
+      }
+    },
+    "/farmers/prescriptions": {
+      "get": {
+        "summary": "Get prescriptions for the authenticated end user",
+        "description": "Get my prescriptions as an end user",
+        "tags": ["User Prescriptions"],
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "patientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "animalType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false
+          },
+          {
+            "name": "hasFollowUp",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoPrescriptionListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "farmers",
+          "prescriptions",
+          "getMyPrescriptions"
+        ],
+        "x-samchon-controller": "UserPrescriptionController"
+      }
+    },
+    "/farmers/prescriptions/{id}": {
+      "get": {
+        "summary": "Get a specific prescription by ID (End User only - own prescriptions)",
+        "description": "Get prescription by ID",
+        "tags": ["User Prescriptions"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrescriptionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["farmers", "prescriptions", "findOne"],
+        "x-samchon-controller": "UserPrescriptionController"
+      }
     }
   },
   "components": {
@@ -2744,6 +3766,479 @@
           }
         },
         "required": []
+      },
+      "PrescriptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "doctorId": {
+            "type": "string"
+          },
+          "doctor": {
+            "$ref": "#/components/schemas/DoctorInfoResponseDto"
+          },
+          "patientId": {
+            "type": "string"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/PatientInfoResponseDto"
+          },
+          "animalType": {
+            "type": "string"
+          },
+          "animalPicture": {
+            "type": "string"
+          },
+          "patientNumber": {
+            "type": "number"
+          },
+          "age": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "temperature": {
+            "type": "string"
+          },
+          "spo2": {
+            "type": "string"
+          },
+          "respirationRate": {
+            "type": "string"
+          },
+          "fecesStatus": {
+            "type": "string"
+          },
+          "nasalSecretion": {
+            "type": "string"
+          },
+          "feedingHistory": {
+            "type": "string"
+          },
+          "medicationHistory": {
+            "type": "string"
+          },
+          "investigation": {
+            "type": "string"
+          },
+          "medications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MedicationResponseDto"
+            }
+          },
+          "advice": {
+            "type": "string"
+          },
+          "consultancyFee": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "followUpDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "reference",
+          "doctorId",
+          "doctor",
+          "patientId",
+          "patient",
+          "animalType",
+          "patientNumber",
+          "medications",
+          "date",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DoctorInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "lastDegree": {
+            "type": "string"
+          },
+          "areaOfExpertise": {
+            "type": "string"
+          },
+          "serviceExperience": {
+            "type": "number"
+          },
+          "jobPosition": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "address",
+          "lastDegree",
+          "areaOfExpertise",
+          "serviceExperience"
+        ]
+      },
+      "PatientInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "farmData": {},
+          "mobileNumber": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "address", "userType", "farmData"]
+      },
+      "MedicationResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dosage": {
+            "type": "string"
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "dosage", "instructions", "duration"]
+      },
+      "CreatePrescriptionDto": {
+        "type": "object",
+        "properties": {
+          "patientId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "animalType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "animalPicture": {
+            "type": "string"
+          },
+          "patientNumber": {
+            "type": "number",
+            "minimum": 0
+          },
+          "age": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "temperature": {
+            "type": "string"
+          },
+          "spo2": {
+            "type": "string"
+          },
+          "respirationRate": {
+            "type": "string"
+          },
+          "fecesStatus": {
+            "type": "string"
+          },
+          "nasalSecretion": {
+            "type": "string"
+          },
+          "feedingHistory": {
+            "type": "string"
+          },
+          "medicationHistory": {
+            "type": "string"
+          },
+          "investigation": {
+            "type": "string"
+          },
+          "medications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MedicationDto"
+            }
+          },
+          "advice": {
+            "type": "string"
+          },
+          "consultancyFee": {
+            "type": "number",
+            "minimum": 0
+          },
+          "followUpDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["patientId", "animalType", "medications"]
+      },
+      "MedicationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dosage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instructions": {
+            "type": "string",
+            "minLength": 1
+          },
+          "duration": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name", "dosage", "instructions", "duration"]
+      },
+      "PaginatedDtoPatientInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatientInfoResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": ["items", "pagination"]
+      },
+      "PaginatedDtoPrescriptionListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrescriptionListResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": ["items", "pagination"]
+      },
+      "PrescriptionListResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "doctorName": {
+            "type": "string"
+          },
+          "patientName": {
+            "type": "string"
+          },
+          "animalType": {
+            "type": "string"
+          },
+          "consultancyFee": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "followUpDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "reference",
+          "doctorName",
+          "patientName",
+          "animalType",
+          "date",
+          "createdAt"
+        ]
+      },
+      "PrescriptionQueryDto": {
+        "type": "object",
+        "properties": {
+          "doctorId": {
+            "type": "string"
+          },
+          "patientId": {
+            "type": "string"
+          },
+          "animalType": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hasFollowUp": {
+            "type": "boolean"
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1
+          },
+          "search": {
+            "type": "string"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sort": {
+            "oneOf": [
+              {
+                "const": "asc"
+              },
+              {
+                "const": "desc"
+              }
+            ]
+          }
+        },
+        "required": []
+      },
+      "UpdatePrescriptionDto": {
+        "type": "object",
+        "properties": {
+          "animalType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "animalPicture": {
+            "type": "string"
+          },
+          "patientNumber": {
+            "type": "number",
+            "minimum": 0
+          },
+          "age": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "temperature": {
+            "type": "string"
+          },
+          "spo2": {
+            "type": "string"
+          },
+          "respirationRate": {
+            "type": "string"
+          },
+          "fecesStatus": {
+            "type": "string"
+          },
+          "nasalSecretion": {
+            "type": "string"
+          },
+          "feedingHistory": {
+            "type": "string"
+          },
+          "medicationHistory": {
+            "type": "string"
+          },
+          "investigation": {
+            "type": "string"
+          },
+          "medications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MedicationDto"
+            }
+          },
+          "advice": {
+            "type": "string"
+          },
+          "consultancyFee": {
+            "type": "number",
+            "minimum": 0
+          },
+          "followUpDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": []
       }
     },
     "securitySchemes": {
@@ -2767,6 +4262,15 @@
     },
     {
       "name": "User Profile"
+    },
+    {
+      "name": "Prescription"
+    },
+    {
+      "name": "Super Admin Prescriptions"
+    },
+    {
+      "name": "User Prescriptions"
     }
   ],
   "x-samchon-emended": true
