@@ -67,7 +67,6 @@ export const prescriptionServiceHooks = {
         (id) => prescriptionApiService.deletePrescriptionId(id)
     ),
 
-
 } as const;
 
 export const userPrescriptionServiceHooks = {

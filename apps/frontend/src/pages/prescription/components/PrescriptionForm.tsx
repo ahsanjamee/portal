@@ -2,23 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Select as MantineSelect } from "@mantine/core";
 import { Textarea } from "@/components/ui/textarea";
 import UploadImage from "@/components/ui/UploadImage";
+import { medicineServiceHooks } from "@/pages/super-admin/medicine/service/medicine.service";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Select as MantineSelect, Select, Skeleton } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { Minus, Plus } from "@phosphor-icons/react";
+import type { PrescriptionResponseDto } from "@portal/portal-api-client";
 import React, { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import type { PrescriptionResponseDto } from "@portal/portal-api-client";
 
 // Validation schema
 const medicationSchema = z.object({
@@ -32,7 +26,7 @@ const prescriptionSchema = z.object({
   patientId: z.string().min(1, "Patient selection is required"),
   animalType: z.string().min(1, "Animal type is required"),
   animalPicture: z.string().optional(),
-  patientNumber: z.number().min(0).nullable().optional(),
+  patientNumber: z.string().optional(),
   age: z.string().optional(),
   sex: z.string().optional(),
   weight: z.number().min(0).nullable().optional(),
@@ -54,7 +48,7 @@ const prescriptionSchema = z.object({
     .array(medicationSchema)
     .min(1, "At least one medication is required"),
   advice: z.string().optional(),
-
+  td: z.string().optional(),
   // Consultation Details
   consultancyFee: z.number().min(0).nullable().optional(),
   followUpDate: z.date().optional(),
@@ -97,7 +91,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
     resolver: zodResolver(prescriptionSchema),
     defaultValues: {
       medications: [{ name: "", dosage: "", instructions: "", duration: "" }],
-      patientNumber: 0,
+      patientNumber: "",
       weight: 0,
       consultancyFee: 0,
     },
@@ -111,6 +105,14 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
   const selectedPatientId = watch("patientId");
   const selectedPatient = patients.find((p) => p.id === selectedPatientId);
   const animalPicture = watch("animalPicture");
+
+  const { data: medicines, isLoading: medicineLoading } =
+    medicineServiceHooks.useGetPublicMedicines({
+      page: 1,
+      pageSize: 99999,
+      sortBy: "name",
+      sort: "desc",
+    });
 
   // Populate form with initial data in edit mode
   useEffect(() => {
@@ -137,6 +139,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
         ]
       );
       setValue("advice", initialData.advice || "");
+      setValue("td", initialData.td || "");
       setValue("consultancyFee", initialData.consultancyFee || 0);
       setValue(
         "followUpDate",
@@ -153,7 +156,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
       animalPicture: data.animalPicture ?? "",
       age: data.age ?? "",
       weight: data.weight ?? null,
-      patientNumber: data.patientNumber ?? null,
+      patientNumber: data.patientNumber ?? "",
       consultancyFee: data.consultancyFee ?? null,
       sex: data.sex ?? "",
       temperature: data.temperature ?? "",
@@ -255,24 +258,22 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select animal type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Calf">Calf</SelectItem>
-                            <SelectItem value="Cow">Cow</SelectItem>
-                            <SelectItem value="Bull">Bull</SelectItem>
-                            <SelectItem value="Goat">Goat</SelectItem>
-                            <SelectItem value="Sheep">Sheep</SelectItem>
-                            <SelectItem value="Chicken">Chicken</SelectItem>
-                            <SelectItem value="Duck">Duck</SelectItem>
-                            <SelectItem value="Fish">Fish</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          data={[
+                            { label: "Calf", value: "Calf" },
+                            { label: "Cow", value: "Cow" },
+                            { label: "Bull", value: "Bull" },
+                            { label: "Goat", value: "Goat" },
+                            { label: "Sheep", value: "Sheep" },
+                            { label: "Chicken", value: "Chicken" },
+                            { label: "Duck", value: "Duck" },
+                            { label: "Fish", value: "Fish" },
+                            { label: "Other", value: "Other" },
+                          ]}
+                          {...field}
+                          searchable={true}
+                          clearable={false}
+                          placeholder="Select animal type"
+                        />
                       )}
                     />
                     {errors.animalType && (
@@ -319,17 +320,15 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select sex" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="M">Male</SelectItem>
-                            <SelectItem value="F">Female</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          data={[
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
+                          ]}
+                          {...field}
+                          searchable={true}
+                          clearable={false}
+                          placeholder="Select sex"
+                        />
                       )}
                     />
                   </div>
@@ -479,6 +478,21 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                     )}
                   />
                 </div>
+
+                <div>
+                  <Label htmlFor="td">Tentative Diagnosis</Label>
+                  <Controller
+                    name="td"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        {...field}
+                        placeholder="Tentative diagnosis"
+                        rows={3}
+                      />
+                    )}
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -512,16 +526,31 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                           <Label htmlFor={`medications.${index}.name`}>
                             Medication Name *
                           </Label>
-                          <Controller
-                            name={`medications.${index}.name`}
-                            control={control}
-                            render={({ field }) => (
-                              <Input
-                                {...field}
-                                placeholder="e.g., Buphos-Vet Injection"
-                              />
-                            )}
-                          />
+
+                          {medicineLoading ? (
+                            <Skeleton className="h-10 w-full" />
+                          ) : (
+                            <Controller
+                              name={`medications.${index}.name`}
+                              control={control}
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  searchable={true}
+                                  clearable={false}
+                                  placeholder="Select medication"
+                                  data={medicines?.items?.map((medicine) => ({
+                                    value: medicine.name,
+                                    label: medicine.name,
+                                  }))}
+                                  classNames={{
+                                    input: "h-[45px]",
+                                  }}
+                                />
+                              )}
+                            />
+                          )}
+
                           {errors.medications?.[index]?.name && (
                             <p className="text-sm text-red-600 mt-1">
                               {errors.medications[index]?.name?.message}

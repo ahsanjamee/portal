@@ -2,19 +2,21 @@ import { TypedBody, TypedParam, TypedQuery, TypedRoute } from '@nestia/core';
 import { Controller, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { User } from '../common/decorators/user.decorator';
-import { PaginatedDto, PaginationQueryDto } from '../common/dto/pagination.dto';
-import { JwtAuthGuard } from '../libs/auth/jwt.guard';
-import { TokenPayload } from '../libs/auth/jwt.service';
+import { User } from '../../common/decorators/user.decorator';
+import { PaginatedDto, PaginationQueryDto } from '../../common/dto/pagination.dto';
+import { JwtAuthGuard } from '../../libs/auth/jwt.guard';
+import { TokenPayload } from '../../libs/auth/jwt.service';
 import {
     CreatePrescriptionDto,
+    MedicationQueryDto,
+    MedicationResponseDto,
     PatientInfoResponseDto,
     PrescriptionListResponseDto,
     PrescriptionQueryDto,
     PrescriptionResponseDto,
     UpdatePrescriptionDto
-} from './dto';
-import { PrescriptionService } from './prescription.service';
+} from '../dto';
+import { PrescriptionService } from '../prescription.service';
 
 @Controller('prescription')
 @ApiTags('Prescription')

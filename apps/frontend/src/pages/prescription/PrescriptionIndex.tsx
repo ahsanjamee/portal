@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useSetTitle } from "@/stores/title-context";
 import { notifications } from "@mantine/notifications";
 import { Plus } from "@phosphor-icons/react";
@@ -17,6 +23,8 @@ import { PrescriptionList } from "./components/PrescriptionList";
 import { PrescriptionDocument } from "./components/PrescriptionPDF";
 import { prescriptionServiceHooks } from "./service";
 import { useAuthAxios } from "@/lib/http/axios.hook";
+import { PDFViewer } from "@react-pdf/renderer";
+import QRCode from "qrcode";
 
 export const PrescriptionIndex: React.FC = () => {
   useSetTitle("Prescription Management");
@@ -37,6 +45,15 @@ export const PrescriptionIndex: React.FC = () => {
   }>({
     isOpen: false,
     prescriptionId: null,
+  });
+
+  // View prescription modal state
+  const [viewModal, setViewModal] = useState<{
+    isOpen: boolean;
+    prescriptionData: any;
+  }>({
+    isOpen: false,
+    prescriptionData: null,
   });
 
   // Table state
@@ -197,11 +214,39 @@ export const PrescriptionIndex: React.FC = () => {
     }
   };
 
+  const handleViewPrescription = async (id: string) => {
+    try {
+      const { data } = await axios.get(`/prescription/${id}`);
+      setViewModal({
+        isOpen: true,
+        prescriptionData: data.data,
+      });
+    } catch (error) {
+      console.error("Error fetching prescription:", error);
+      notifications.show({
+        title: "Error",
+        message: "Failed to fetch prescription details",
+        color: "red",
+      });
+    }
+  };
+
+  const closeViewModal = () => {
+    setViewModal({ isOpen: false, prescriptionData: null });
+  };
+
+  const generateQRCodeDataURL = async (value: string): Promise<string> => {
+    return await QRCode.toDataURL(value);
+  };
+
   const generateAndDownloadPDF = async (prescriptionData: any) => {
     try {
       // Generate PDF using frontend component
       const blob = await pdf(
-        <PrescriptionDocument data={prescriptionData} />
+        <PrescriptionDocument
+          data={prescriptionData}
+          qrUrl={generateQRCodeDataURL("https://adibd.net")}
+        />
       ).toBlob();
 
       // Create download link
@@ -288,6 +333,7 @@ export const PrescriptionIndex: React.FC = () => {
             onEdit={handleEditPrescription}
             onDelete={handleDeletePrescription}
             onDownload={handleDownloadPrescription}
+            onView={handleViewPrescription}
             onRefresh={refetchPrescriptions}
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
@@ -333,6 +379,25 @@ export const PrescriptionIndex: React.FC = () => {
         confirmText="Delete"
         loading={deletePrescriptionMutation.isPending}
       />
+
+      {/* View Prescription Modal */}
+      <Dialog open={viewModal.isOpen} onOpenChange={closeViewModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Prescription Details</DialogTitle>
+          </DialogHeader>
+          {viewModal.prescriptionData && (
+            <div className="mt-4 h-[1400px] w-full">
+              <PDFViewer className="w-full h-full">
+                <PrescriptionDocument
+                  data={viewModal.prescriptionData}
+                  qrUrl={generateQRCodeDataURL("https://adibd.net")}
+                />
+              </PDFViewer>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

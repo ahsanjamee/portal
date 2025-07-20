@@ -1,6 +1,6 @@
 import type { DoctorInfoResponseDto } from "./DoctorInfoResponseDto";
 import type { PatientInfoResponseDto } from "./PatientInfoResponseDto";
-import type { MedicationResponseDto } from "./MedicationResponseDto";
+import type { MedicineResponseDto } from "./MedicineResponseDto";
 
 export type PrescriptionResponseDto = {
   /**
@@ -36,9 +36,9 @@ export type PrescriptionResponseDto = {
    */
   animalPicture?: string;
   /**
-   * @type number
+   * @type string
    */
-  patientNumber: number;
+  patientNumber: string;
   /**
    * @type string | undefined
    */
@@ -86,7 +86,7 @@ export type PrescriptionResponseDto = {
   /**
    * @type array
    */
-  medications: MedicationResponseDto[];
+  medications: MedicineResponseDto[];
   /**
    * @type string | undefined
    */
@@ -99,6 +99,10 @@ export type PrescriptionResponseDto = {
    * @type string | undefined, date-time
    */
   followUpDate?: string;
+  /**
+   * @type string | undefined
+   */
+  td?: string;
   /**
    * @type string, date-time
    */

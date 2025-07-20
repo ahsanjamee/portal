@@ -8,4 +8,8 @@ export interface PrescriptionQueryDto extends PaginationQueryDto {
     startDate?: string & tags.Format<"date-time">;
     endDate?: string & tags.Format<"date-time">;
     hasFollowUp?: boolean;
+}
+
+export interface MedicationQueryDto extends PaginationQueryDto {
+    name?: string;
 } 

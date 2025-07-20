@@ -1,16 +1,16 @@
 import { TypedParam, TypedQuery, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { PaginatedDto } from '../common/dto/pagination.dto';
-import { JwtAuthGuard } from '../libs/auth/jwt.guard';
-import { SuperAdminRoleGuard } from '../libs/guards/role.guard';
+import { BooleanType } from 'src/common';
+import { PaginatedDto } from '../../common/dto/pagination.dto';
+import { JwtAuthGuard } from '../../libs/auth/jwt.guard';
+import { SuperAdminRoleGuard } from '../../libs/guards/role.guard';
 import {
     PrescriptionListResponseDto,
     PrescriptionQueryDto,
     PrescriptionResponseDto
-} from './dto';
-import { PrescriptionService } from './prescription.service';
-import { BooleanType } from 'src/common';
+} from '../dto';
+import { PrescriptionService } from '../prescription.service';
 
 @Controller('super-admin/prescriptions')
 @ApiTags('Super Admin Prescriptions')
@@ -39,4 +39,6 @@ export class SuperAdminPrescriptionController {
     ): Promise<BooleanType> {
         return this.prescriptionService.deletePrescriptionById(id);
     }
+
+
 } 

@@ -8,8 +8,9 @@ import {
     PrescriptionResponseDto,
     PrescriptionListResponseDto,
     MedicationResponseDto,
-    DoctorInfoResponseDto,
-    PatientInfoResponseDto
+    PatientInfoResponseDto,
+    MedicationDto,
+    MedicationQueryDto
 } from './dto';
 import { PaginatedDto, PaginationQueryDto, resetPaginationQuery, paginatedData } from '../common/dto/pagination.dto';
 import { BooleanType } from 'src/common';
@@ -50,7 +51,6 @@ export class PrescriptionService {
         // Generate reference number
         const reference = await this.generateReferenceNumber();
 
-        console.log("=====", createPrescriptionDto)
 
         // Create prescription
         const prescription = await this.prisma.prescription.create({
@@ -58,26 +58,9 @@ export class PrescriptionService {
                 ...createPrescriptionDto,
                 reference,
                 doctorId,
-                medications: createPrescriptionDto.medications as any,
+                medications: createPrescriptionDto.medications as any[],
                 followUpDate: createPrescriptionDto.followUpDate ? new Date(createPrescriptionDto.followUpDate) : null,
-                // patientId: createPrescriptionDto.patientId,
-                // animalType: createPrescriptionDto.animalType,
-                // animalPicture: createPrescriptionDto.animalPicture ?? undefined,
-                // patientNumber: createPrescriptionDto.patientNumber || 0,
-                // age: createPrescriptionDto.age,
-                // sex: createPrescriptionDto.sex,
-                // weight: createPrescriptionDto.weight,
-                // temperature: createPrescriptionDto.temperature,
-                // spo2: createPrescriptionDto.spo2,
-                // respirationRate: createPrescriptionDto.respirationRate,
-                // fecesStatus: createPrescriptionDto.fecesStatus,
-                // nasalSecretion: createPrescriptionDto.nasalSecretion,
-                // feedingHistory: createPrescriptionDto.feedingHistory,
-                // medicationHistory: createPrescriptionDto.medicationHistory,
-                // investigation: createPrescriptionDto.investigation,
-                // advice: createPrescriptionDto.advice,
-                // consultancyFee: createPrescriptionDto.consultancyFee,
-                // followUpDate: createPrescriptionDto.followUpDate ? new Date(createPrescriptionDto.followUpDate) : undefined,
+
             },
             include: {
                 doctor: {
@@ -266,22 +249,6 @@ export class PrescriptionService {
                 ...updatePrescriptionDto,
                 medications: updatePrescriptionDto.medications as any,
                 followUpDate: updatePrescriptionDto.followUpDate ? new Date(updatePrescriptionDto.followUpDate) : null,
-                // animalType: updatePrescriptionDto.animalType,
-                // animalPicture: updatePrescriptionDto.animalPicture ?? undefined,
-                // patientNumber: updatePrescriptionDto.patientNumber,
-                // age: updatePrescriptionDto.age,
-                // sex: updatePrescriptionDto.sex,
-                // weight: updatePrescriptionDto.weight,
-                // temperature: updatePrescriptionDto.temperature,
-                // spo2: updatePrescriptionDto.spo2,
-                // respirationRate: updatePrescriptionDto.respirationRate,
-                // fecesStatus: updatePrescriptionDto.fecesStatus,
-                // nasalSecretion: updatePrescriptionDto.nasalSecretion,
-                // feedingHistory: updatePrescriptionDto.feedingHistory,
-                // medicationHistory: updatePrescriptionDto.medicationHistory,
-                // investigation: updatePrescriptionDto.investigation,
-                // advice: updatePrescriptionDto.advice,
-                // consultancyFee: updatePrescriptionDto.consultancyFee,
             },
             include: {
                 doctor: {
@@ -369,7 +336,8 @@ export class PrescriptionService {
                 photo: prescription.patient.photo ?? undefined,
                 userType: prescription.patient.userType,
                 farmData: prescription.patient.farmData,
-                mobileNumber: prescription.patient.user.mobileNumber
+                mobileNumber: prescription.patient.user.mobileNumber,
+                email: prescription.patient.user.email ?? ''
             },
             animalType: prescription.animalType,
             animalPicture: prescription.animalPicture,
@@ -385,7 +353,7 @@ export class PrescriptionService {
             feedingHistory: prescription.feedingHistory,
             medicationHistory: prescription.medicationHistory,
             investigation: prescription.investigation,
-            medications: prescription.medications as MedicationResponseDto[],
+            medications: prescription.medications as any[],
             advice: prescription.advice,
             consultancyFee: prescription.consultancyFee,
             followUpDate: prescription.followUpDate?.toISOString(),
@@ -409,5 +377,71 @@ export class PrescriptionService {
         });
 
         return true
+    }
+
+    async createMedication(medication: MedicationDto): Promise<MedicationResponseDto> {
+        const newMedication = await this.prisma.medication.create({
+            data: medication
+        });
+
+        return {
+            name: newMedication.name,
+            id: newMedication.id,
+            createdAt: newMedication.createdAt.toISOString(),
+            updatedAt: newMedication.updatedAt.toISOString()
+        };
+    }
+
+    async updateMedication(id: string, medication: MedicationDto): Promise<MedicationResponseDto> {
+        const updatedMedication = await this.prisma.medication.update({
+            where: { id },
+            data: medication
+        });
+
+        return {
+            name: updatedMedication.name,
+            id: updatedMedication.id,
+            createdAt: updatedMedication.createdAt.toISOString(),
+            updatedAt: updatedMedication.updatedAt.toISOString()
+        };
+    }
+
+    async deleteMedication(id: string): Promise<BooleanType> {
+        await this.prisma.medication.delete({
+            where: { id }
+        });
+
+        return true
+    }
+
+    async getMedications(query: MedicationQueryDto): Promise<PaginatedDto<MedicationResponseDto>> {
+        const normalizedQuery = resetPaginationQuery(query);
+
+        const whereCondition: any = {
+            name: {
+                contains: normalizedQuery.search,
+                mode: 'insensitive' as const
+            }
+        }
+
+        const total = await this.prisma.medication.count({
+            where: whereCondition
+        });
+
+        const medicationList = await this.prisma.medication.findMany({
+            where: whereCondition,
+            orderBy: { createdAt: 'desc' },
+            skip: normalizedQuery.page * normalizedQuery.pageSize,
+            take: normalizedQuery.pageSize
+        })
+
+        const items = medicationList.map(medication => ({
+            name: medication.name,
+            id: medication.id,
+            createdAt: medication.createdAt.toISOString(),
+            updatedAt: medication.updatedAt.toISOString()
+        }));
+
+        return paginatedData(items, total, normalizedQuery)
     }
 } 

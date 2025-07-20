@@ -2,6 +2,13 @@ import { tags } from "typia";
 
 export interface MedicationResponseDto {
     name: string;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface MedicineResponseDto {
+    name: string;
     dosage: string;
     instructions: string;
     duration: string;
@@ -26,6 +33,7 @@ export interface PatientInfoResponseDto {
     userType: string;
     farmData: any;
     mobileNumber?: string;
+    email?: string;
 }
 
 export interface PrescriptionResponseDto {
@@ -43,7 +51,7 @@ export interface PrescriptionResponseDto {
     // Animal Information
     animalType: string;
     animalPicture?: string;
-    patientNumber: number;
+    patientNumber: string;
     age?: string;
     sex?: string;
     weight?: number;
@@ -61,12 +69,13 @@ export interface PrescriptionResponseDto {
     investigation?: string;
 
     // Prescription Details
-    medications: MedicationResponseDto[];
+    medications: MedicineResponseDto[];
     advice?: string;
 
     // Consultation Details
     consultancyFee?: number;
     followUpDate?: string & tags.Format<"date-time">;
+    td?: string;
 
     createdAt: string & tags.Format<"date-time">;
     updatedAt: string & tags.Format<"date-time">;

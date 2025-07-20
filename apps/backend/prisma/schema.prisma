@@ -192,7 +192,7 @@ model Prescription {
     // Animal Information
     animalType  String   // Calf, Cow, etc.
     animalPicture String?
-    patientNumber Int    @default(0)
+    patientNumber String?
     age         String?
     sex         String?  // M/F
     weight      Float?   // in kg
@@ -204,6 +204,7 @@ model Prescription {
     fecesStatus String?  // Normal, diarrhea, etc.
     nasalSecretion String? // Normal, runny, etc.
     feedingHistory String? // Grass, straw, mixed feed
+    td String? // Previous treatments
     
     // Medical History
     medicationHistory String? // Previous medications
@@ -223,4 +224,9 @@ model Prescription {
     @@map("prescriptions")
 }
 
-
+model Medication {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

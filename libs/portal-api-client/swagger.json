@@ -2565,6 +2565,286 @@
         "x-samchon-accessor": ["farmers", "prescriptions", "findOne"],
         "x-samchon-controller": "UserPrescriptionController"
       }
+    },
+    "/super-admin/medicines/public": {
+      "get": {
+        "tags": ["Super Admin Medicine", "Public Medicine"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoMedicationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": [
+          "super_admin",
+          "medicines",
+          "$public",
+          "getPublicMedications"
+        ],
+        "x-samchon-controller": "SuperAdminMedicineController"
+      }
+    },
+    "/super-admin/medicines": {
+      "get": {
+        "tags": ["Super Admin Medicine"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 1
+            },
+            "required": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "const": "asc"
+                },
+                {
+                  "const": "desc"
+                }
+              ]
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDtoMedicationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["super_admin", "medicines", "getMedications"],
+        "x-samchon-controller": "SuperAdminMedicineController"
+      },
+      "post": {
+        "tags": ["Super Admin Medicine"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["super_admin", "medicines", "createMedication"],
+        "x-samchon-controller": "SuperAdminMedicineController"
+      }
+    },
+    "/super-admin/medicines/{id}": {
+      "put": {
+        "tags": ["Super Admin Medicine"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicationDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["super_admin", "medicines", "updateMedication"],
+        "x-samchon-controller": "SuperAdminMedicineController"
+      },
+      "delete": {
+        "tags": ["Super Admin Medicine"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "x-samchon-accessor": ["super_admin", "medicines", "deleteMedication"],
+        "x-samchon-controller": "SuperAdminMedicineController"
+      }
     }
   },
   "components": {
@@ -3515,7 +3795,7 @@
             "type": "string"
           },
           "patientNumber": {
-            "type": "number"
+            "type": "string"
           },
           "age": {
             "type": "string"
@@ -3553,7 +3833,7 @@
           "medications": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/MedicationResponseDto"
+              "$ref": "#/components/schemas/MedicineResponseDto"
             }
           },
           "advice": {
@@ -3565,6 +3845,9 @@
           "followUpDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "td": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -3647,11 +3930,14 @@
           "farmData": {},
           "mobileNumber": {
             "type": "string"
+          },
+          "email": {
+            "type": "string"
           }
         },
         "required": ["id", "name", "address", "userType", "farmData"]
       },
-      "MedicationResponseDto": {
+      "MedicineResponseDto": {
         "type": "object",
         "properties": {
           "name": {
@@ -3689,7 +3975,14 @@
             ]
           },
           "patientNumber": {
-            "type": "number"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "age": {
             "oneOf": [
@@ -3772,6 +4065,16 @@
             ]
           },
           "feedingHistory": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "td": {
             "oneOf": [
               {
                 "type": "null"
@@ -3862,6 +4165,7 @@
           "fecesStatus",
           "nasalSecretion",
           "feedingHistory",
+          "td",
           "medicationHistory",
           "investigation",
           "medications",
@@ -4008,7 +4312,14 @@
             ]
           },
           "patientNumber": {
-            "type": "number"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           },
           "age": {
             "oneOf": [
@@ -4100,6 +4411,16 @@
               }
             ]
           },
+          "td": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
           "medicationHistory": {
             "oneOf": [
               {
@@ -4181,12 +4502,89 @@
           "fecesStatus",
           "nasalSecretion",
           "feedingHistory",
+          "td",
           "medicationHistory",
           "investigation",
           "medications",
           "advice",
           "consultancyFee"
         ]
+      },
+      "PaginatedDtoMedicationResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MedicationResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": ["items", "pagination"]
+      },
+      "MedicationResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "id", "createdAt", "updatedAt"]
+      },
+      "MedicationQueryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "pageSize": {
+            "type": "number",
+            "minimum": 1
+          },
+          "search": {
+            "type": "string"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sort": {
+            "oneOf": [
+              {
+                "const": "asc"
+              },
+              {
+                "const": "desc"
+              }
+            ]
+          }
+        },
+        "required": []
+      },
+      "MedicationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name"]
       }
     },
     "securitySchemes": {
@@ -4219,6 +4617,12 @@
     },
     {
       "name": "User Prescriptions"
+    },
+    {
+      "name": "Super Admin Medicine"
+    },
+    {
+      "name": "Public Medicine"
     }
   ],
   "x-samchon-emended": true

@@ -135,4 +135,24 @@ export const operations = {
     path: "/farmers/prescriptions/:id",
     method: "get",
   },
+  "get_super-admin-medicines-public": {
+    path: "/super-admin/medicines/public",
+    method: "get",
+  },
+  "get_super-admin-medicines": {
+    path: "/super-admin/medicines",
+    method: "get",
+  },
+  "post_super-admin-medicines": {
+    path: "/super-admin/medicines",
+    method: "post",
+  },
+  "put_super-admin-medicines-id": {
+    path: "/super-admin/medicines/:id",
+    method: "put",
+  },
+  "delete_super-admin-medicines-id": {
+    path: "/super-admin/medicines/:id",
+    method: "delete",
+  },
 } as const;

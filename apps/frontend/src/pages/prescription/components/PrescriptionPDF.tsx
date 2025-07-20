@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Download } from "@phosphor-icons/react";
 import {
   Document,
   Image,
@@ -7,7 +5,6 @@ import {
   StyleSheet,
   Text,
   View,
-  pdf,
 } from "@react-pdf/renderer";
 import React from "react";
 
@@ -67,7 +64,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontSize: 9,
     color: "#000",
-    width: 80,
+    width: 100,
     alignItems: "flex-end",
     justifyContent: "center",
   },
@@ -114,6 +111,7 @@ const styles = StyleSheet.create({
     padding: 8,
     border: "1px solid #000",
     marginBottom: 8,
+    minHeight: 207, // Adjusted for better spacing
   },
   sectionTitle: {
     fontSize: 10,
@@ -142,7 +140,10 @@ const styles = StyleSheet.create({
     border: "1px solid #000",
   },
   footer: {
-    textAlign: "center",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
     fontSize: 7,
     color: "#000",
     marginTop: 10,
@@ -175,6 +176,10 @@ const styles = StyleSheet.create({
   lastGridCol: {
     flex: 1,
   },
+  qrCode: {
+    width: 50,
+    height: 50,
+  },
 });
 
 interface PrescriptionData {
@@ -190,9 +195,10 @@ interface PrescriptionData {
     name: string;
     address: string;
     mobileNumber?: string;
+    email?: string;
   };
   animalType: string;
-  patientNumber: number;
+  patientNumber: string;
   age?: string;
   sex?: string;
   weight?: number;
@@ -211,18 +217,21 @@ interface PrescriptionData {
     duration: string;
   }>;
   advice?: string;
+  td?: string;
   consultancyFee?: number;
-  date: string;
+  createdAt: string;
   followUpDate?: string;
   animalPicture?: string;
 }
 
 interface PrescriptionDocumentProps {
   data: PrescriptionData;
+  qrUrl: Promise<string>;
 }
 
 const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
   data,
+  qrUrl,
 }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -230,25 +239,24 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
         {/* Header with Logo */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image src="/logo.png" style={styles.logo} />
+            <Image src="/logo-med.jpg" style={styles.logo} />
           </View>
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>ADI PET and LIVESTOCK CARE</Text>
             <Text style={styles.headerText}>
-              Chamber: 87 Paltan Tower, Purana Paltan (1504,Level-15)
+              Chamber: 87 Paltan Tower, Purana Paltan, Paltan line
             </Text>
             <Text style={styles.headerText}>Dhaka-1000, Bangladesh</Text>
             <Text style={styles.headerText}>
               Mobile: +8801712652107; Hotline:09611083002
             </Text>
             <Text style={styles.headerText}>
-              E-mail: adirakib21@gmail.com; www.adi-bd.com
+              E-mail: adirakib21@gmail.com; www.adibd.net
             </Text>
           </View>
           {/* Doctor Info */}
           <View style={styles.doctorInfo}>
             <Text>{data.doctor?.name || ""}</Text>
-            <Text>{data.doctor?.address || ""}</Text>
             <Text>{data.doctor?.lastDegree || ""}</Text>
             <Text>{data.doctor?.areaOfExpertise || ""}</Text>
           </View>
@@ -258,33 +266,30 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
         <View style={styles.row}>
           <View style={styles.colLeft}>
             <View style={styles.field}>
-              <Text style={styles.label}>B.V.C Regi:</Text>
-              <Text style={styles.input}>2580</Text>
-            </View>
-
-            <View style={styles.field}>
-              <Text style={styles.label}>Reference:</Text>
+              <Text style={styles.label}>Reference/(PID):</Text>
               <Text style={styles.input}>{data.reference}</Text>
             </View>
           </View>
           <View style={styles.colRight}>
-            <View style={styles.field}>
-              <Text style={styles.label}>Consultancy Fee(Tk):</Text>
-              <Text style={styles.input}>{data.consultancyFee || "500"}</Text>
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>Date:</Text>
-              <Text style={styles.input}>
-                {new Date(data.date).toLocaleDateString()}
-              </Text>
-            </View>
-            <View style={styles.field}>
-              <Text style={styles.label}>Follow up:</Text>
-              <Text style={styles.input}>
-                {data.followUpDate
-                  ? new Date(data.followUpDate).toLocaleDateString()
-                  : ""}
-              </Text>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <View style={[styles.field, { flex: 1 }]}>
+                <Text style={styles.label}>Consultancy Fee(Tk):</Text>
+                <Text style={styles.input}>{data.consultancyFee || "500"}</Text>
+              </View>
+              <View style={[styles.field, { flex: 1 }]}>
+                <Text style={styles.label}>Date:</Text>
+                <Text style={styles.input}>
+                  {new Date(data.createdAt).toLocaleDateString()}
+                </Text>
+              </View>
+              <View style={[styles.field, { flex: 1 }]}>
+                <Text style={styles.label}>Follow up:</Text>
+                <Text style={styles.input}>
+                  {data.followUpDate
+                    ? new Date(data.followUpDate).toLocaleDateString()
+                    : ""}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -311,6 +316,12 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
                   {data.patient?.mobileNumber || ""}
                 </Text>
               </View>
+
+              <View style={styles.field}>
+                <Text style={styles.label}>Email:</Text>
+                <Text style={styles.input}>{data.patient?.email || ""}</Text>
+              </View>
+
               <View style={styles.field}>
                 <Text style={styles.label}>Owner's Complaints:</Text>
                 <Text style={styles.textArea}>
@@ -318,15 +329,34 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
                 </Text>
               </View>
             </View>
+
             <View style={styles.colRight}>
-              <View style={styles.field}>
-                <Text style={styles.label}>Patient Type:</Text>
-                <Text style={styles.input}>{data.animalType}</Text>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <View style={[styles.field, { flex: 1 }]}>
+                  <Text style={styles.label}>Patient Type:</Text>
+                  <Text style={styles.input}>{data.animalType}</Text>
+                </View>
+                <View style={[styles.field, { flex: 1 }]}>
+                  <Text style={styles.label}>Patient Name/Tag no:</Text>
+                  <Text style={styles.input}>{data.patientNumber}</Text>
+                </View>
               </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Patient Name/№:</Text>
-                <Text style={styles.input}>{data.patientNumber}</Text>
+
+              <View style={styles.gridRow}>
+                <View style={styles.gridCol}>
+                  <Text style={styles.label}>Age(Year):</Text>
+                  <Text style={styles.input}>{data.age || ""}</Text>
+                </View>
+                <View style={styles.gridCol}>
+                  <Text style={styles.label}>Sex (M/F):</Text>
+                  <Text style={styles.input}>{data.sex || ""}</Text>
+                </View>
+                <View style={styles.lastGridCol}>
+                  <Text style={styles.label}>Weight (Kg):</Text>
+                  <Text style={styles.input}>{data.weight || ""}</Text>
+                </View>
               </View>
+
               <View style={styles.field}>
                 <Text style={styles.label}>Patient's Picture:</Text>
                 <View style={styles.animalImage}>
@@ -339,20 +369,6 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
                     <Text>No Image</Text>
                   )}
                 </View>
-              </View>
-              <View style={styles.gridRow}>
-                <View style={styles.gridCol}>
-                  <Text style={styles.label}>Age(Year):</Text>
-                  <Text style={styles.input}>{data.age || ""}</Text>
-                </View>
-                <View style={styles.lastGridCol}>
-                  <Text style={styles.label}>Sex (M/F):</Text>
-                  <Text style={styles.input}>{data.sex || ""}</Text>
-                </View>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Weight (Kg):</Text>
-                <Text style={styles.input}>{data.weight || ""}</Text>
               </View>
             </View>
           </View>
@@ -403,6 +419,10 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
                 <Text style={styles.label}>Investigation:</Text>
                 <Text style={styles.textArea}>{data.investigation || ""}</Text>
               </View>
+              <View style={styles.field}>
+                <Text style={styles.label}>Tentative Diagnosis:</Text>
+                <Text style={styles.textArea}>{data.td || ""}</Text>
+              </View>
             </View>
           </View>
 
@@ -435,43 +455,16 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
 
         {/* Footer */}
         <View style={styles.footer}>
+          <Image style={styles.qrCode} src={qrUrl} />
           <Text>
             © All Rights Reserved by Dr.Md.Rakibur Rahman(Rakib). Note:
             Preserve The Prescription for Next Reference.
           </Text>
+          <View></View>
         </View>
       </View>
     </Page>
   </Document>
 );
-
-interface PrescriptionPDFProps {
-  data: PrescriptionData;
-  fileName?: string;
-}
-
-export const PrescriptionPDF: React.FC<PrescriptionPDFProps> = ({
-  data,
-  fileName = `prescription_${data.reference}.pdf`,
-}) => {
-  const handleDownload = async () => {
-    const blob = await pdf(<PrescriptionDocument data={data} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-  };
-
-  return (
-    <Button onClick={handleDownload} className="flex items-center gap-2">
-      <Download size={16} />
-      Download PDF
-    </Button>
-  );
-};
 
 export { PrescriptionDocument };

@@ -31,13 +31,19 @@ export const AdminsPage = () => {
 
   useSetTitle("Admin Users");
 
+  const queryParams = {
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+    sortBy: sorting.length ? (sorting[0]?.id as string) : "createdAt",
+    sort: (sorting.length ? (sorting[0]?.desc ? "desc" : "asc") : "desc") as
+      | "asc"
+      | "desc",
+    search,
+  };
+
   const { data, isLoading, error, isFetching, refetch } =
-    superAdminUsersService.useGetAdmins({
-      page: pagination.pageIndex + 1,
-      pageSize: pagination.pageSize,
-      sortBy: sorting.length ? (sorting[0]?.id as string) : "createdAt",
-      sort: sorting.length ? (sorting[0]?.desc ? "desc" : "asc") : "desc",
-      search,
+    superAdminUsersService.useGetAdmins(queryParams, {
+      queryKey: ["super-admin", "admins", queryParams],
     });
 
   const { mutate: deleteUser, isPending: deleteLoading } =

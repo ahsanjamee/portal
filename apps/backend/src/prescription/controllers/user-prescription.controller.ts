@@ -1,17 +1,17 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { TypedRoute, TypedParam, TypedQuery } from '@nestia/core';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../libs/auth/jwt.guard';
-import { UserRoleGuard } from '../libs/guards/role.guard';
-import { User } from '../common/decorators/user.decorator';
-import { TokenPayload } from '../libs/auth/jwt.service';
-import { PrescriptionService } from './prescription.service';
+import { JwtAuthGuard } from '../../libs/auth/jwt.guard';
+import { UserRoleGuard } from '../../libs/guards/role.guard';
+import { User } from '../../common/decorators/user.decorator';
+import { TokenPayload } from '../../libs/auth/jwt.service';
+import { PrescriptionService } from '../prescription.service';
 import {
     PrescriptionQueryDto,
     PrescriptionResponseDto,
     PrescriptionListResponseDto
-} from './dto';
-import { PaginatedDto } from '../common/dto/pagination.dto';
+} from '../dto';
+import { PaginatedDto } from '../../common/dto/pagination.dto';
 
 @Controller('farmers/prescriptions')
 @ApiTags('User Prescriptions')

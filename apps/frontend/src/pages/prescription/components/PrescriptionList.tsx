@@ -2,7 +2,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PaginatedTable from "@/components/ui/Table/PaginatedTable";
-import { DownloadIcon, PencilIcon, TrashIcon } from "@phosphor-icons/react";
+import {
+  DownloadIcon,
+  PencilIcon,
+  TrashIcon,
+  EyeIcon,
+} from "@phosphor-icons/react";
 import { format } from "date-fns";
 import { MRT_ColumnDef } from "mantine-react-table";
 import React from "react";
@@ -27,6 +32,7 @@ interface PrescriptionListProps {
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
   onDownload?: (id: string) => void;
+  onView?: (id: string) => void;
   onRefresh?: () => void;
   // Pagination props
   columnFilters?: any;
@@ -49,6 +55,7 @@ export const PrescriptionList: React.FC<PrescriptionListProps> = ({
   onEdit,
   onDelete,
   onDownload,
+  onView,
   onRefresh,
   columnFilters,
   setColumnFilters,
@@ -125,6 +132,17 @@ export const PrescriptionList: React.FC<PrescriptionListProps> = ({
 
     return (
       <div className="flex items-center gap-2">
+        {onView && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onView(prescription.id)}
+            title="View Prescription"
+          >
+            <EyeIcon size={16} />
+          </Button>
+        )}
+
         {onDownload && (
           <Button
             variant="ghost"

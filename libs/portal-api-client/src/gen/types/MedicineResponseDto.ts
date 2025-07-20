@@ -1,4 +1,4 @@
-export type MedicationResponseDto = {
+export type MedicineResponseDto = {
   /**
    * @type string
    */
@@ -6,13 +6,13 @@ export type MedicationResponseDto = {
   /**
    * @type string
    */
-  id: string;
+  dosage: string;
   /**
    * @type string
    */
-  createdAt: string;
+  instructions: string;
   /**
    * @type string
    */
-  updatedAt: string;
+  duration: string;
 };

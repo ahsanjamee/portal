@@ -24,4 +24,8 @@ export type PatientInfoResponseDto = {
    * @type string | undefined
    */
   mobileNumber?: string;
+  /**
+   * @type string | undefined
+   */
+  email?: string;
 };

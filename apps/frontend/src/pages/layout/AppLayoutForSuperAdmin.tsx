@@ -8,6 +8,7 @@ import {
   ReceiptIcon,
   UserCheckIcon,
   UsersIcon,
+  Pill,
 } from "@phosphor-icons/react";
 import { RiUserFill } from "react-icons/ri";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -40,6 +41,11 @@ export const AppLayoutForSuperAdmin = () => {
       label: "Prescriptions",
       to: "/super-admin/prescriptions",
       icon: <ReceiptIcon size={20} />,
+    },
+    {
+      label: "Medicines",
+      to: "/super-admin/medicines",
+      icon: <Pill size={20} />,
     },
   ];
 
