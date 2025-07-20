@@ -6,10 +6,8 @@ export const useOtpTimer = (initialTime: number = 180) => { // 3 minutes = 180 s
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const startTimer = useCallback(() => {
-        console.log("startTimer called - setting timeLeft to:", initialTime);
         setTimeLeft(initialTime);
         setIsActive(true);
-        console.log("Timer activated");
     }, [initialTime]);
 
     const resetTimer = useCallback(() => {
@@ -30,13 +28,10 @@ export const useOtpTimer = (initialTime: number = 180) => { // 3 minutes = 180 s
     }, []);
 
     useEffect(() => {
-        console.log("Timer useEffect triggered - isActive:", isActive, "timeLeft:", timeLeft);
         if (isActive && timeLeft > 0) {
-            console.log("Starting interval...");
             intervalRef.current = setInterval(() => {
                 setTimeLeft((prevTime) => {
                     if (prevTime <= 1) {
-                        console.log("Timer finished");
                         setIsActive(false);
                         return 0;
                     }
@@ -45,7 +40,6 @@ export const useOtpTimer = (initialTime: number = 180) => { // 3 minutes = 180 s
             }, 1000);
         } else {
             if (intervalRef.current) {
-                console.log("Clearing interval");
                 clearInterval(intervalRef.current);
                 intervalRef.current = null;
             }

@@ -97,6 +97,8 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
     },
   });
 
+  console.log(errors);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "medications",
@@ -169,6 +171,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
       investigation: data.investigation ?? "",
       advice: data.advice ?? "",
       followUpDate: data.followUpDate ?? undefined,
+      td: data.td ?? "",
     });
   };
 
