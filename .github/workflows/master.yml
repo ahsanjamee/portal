@@ -1,0 +1,39 @@
+name: Master Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    name: Deploying to Master Server
+    steps:
+      - name: Start Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{secrets.PASSWORD}}
+          script: |
+            cd /home/ubuntu/adi/portal
+            git stash -u
+
+            pm2 stop adi-portal-backend
+            git pull origin master
+            pnpm install
+
+            pnpm prisma:generate
+            pnpm gen:api-client
+
+            cd apps/backend
+            pnpm build
+
+            pm2 restart adi-portal-backend
+
+            cd ../frontend
+            pnpm build
+            pm2 restart portal-admin3
+
+            exit

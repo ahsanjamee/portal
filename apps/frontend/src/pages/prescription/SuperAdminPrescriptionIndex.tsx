@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { PrescriptionList } from "./components/PrescriptionList";
 import { PrescriptionDocument } from "./components/PrescriptionPDF";
 import { superAdminPrescriptionServiceHooks } from "./service";
+import QRCode from "qrcode";
 
 export const SuperAdminPrescriptionIndex: React.FC = () => {
   useSetTitle("Prescription Management");
@@ -111,11 +112,18 @@ export const SuperAdminPrescriptionIndex: React.FC = () => {
     }
   };
 
+  const generateQRCodeDataURL = async (value: string): Promise<string> => {
+    return await QRCode.toDataURL(value);
+  };
+
   const generateAndDownloadPDF = async (prescriptionData: any) => {
     try {
       // Generate PDF using frontend component
       const blob = await pdf(
-        <PrescriptionDocument data={prescriptionData} />
+        <PrescriptionDocument
+          data={prescriptionData}
+          qrUrl={generateQRCodeDataURL("https://adibd.net")}
+        />
       ).toBlob();
 
       // Create download link
