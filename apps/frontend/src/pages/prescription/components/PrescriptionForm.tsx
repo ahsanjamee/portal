@@ -97,8 +97,6 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
     },
   });
 
-  console.log(errors);
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "medications",
@@ -108,12 +106,16 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
   const selectedPatient = patients.find((p) => p.id === selectedPatientId);
   const animalPicture = watch("animalPicture");
 
+  const queryParams = {
+    page: 1,
+    pageSize: 9999,
+    sortBy: "createdAt",
+    sort: "asc",
+  };
+
   const { data: medicines, isLoading: medicineLoading } =
-    medicineServiceHooks.useGetPublicMedicines({
-      page: 1,
-      pageSize: 99999,
-      sortBy: "name",
-      sort: "desc",
+    medicineServiceHooks.useGetPublicMedicines(queryParams, {
+      queryKey: ["public-medicines", queryParams],
     });
 
   // Populate form with initial data in edit mode
