@@ -293,12 +293,8 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                       control={control}
                       render={({ field }) => (
                         <Input
-                          type="number"
                           {...field}
                           value={field.value ?? ""}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
                           placeholder="Enter patient number"
                         />
                       )}
