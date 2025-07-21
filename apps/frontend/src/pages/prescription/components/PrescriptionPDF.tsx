@@ -239,7 +239,7 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
         {/* Header with Logo */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image src="/logo-med.jpg" style={styles.logo} />
+            <Image src="/logo-med.png" style={styles.logo} />
           </View>
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>ADI PET and LIVESTOCK CARE</Text>
