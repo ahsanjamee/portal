@@ -38,6 +38,7 @@ const prescriptionSchema = z.object({
   fecesStatus: z.string().optional(),
   nasalSecretion: z.string().optional(),
   feedingHistory: z.string().optional(),
+  ownersComplaints: z.string().optional(),
 
   // Medical History
   medicationHistory: z.string().optional(),
@@ -128,6 +129,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
       setValue("age", initialData.age || "");
       setValue("sex", initialData.sex || "");
       setValue("weight", initialData.weight || 0);
+      setValue("ownersComplaints", initialData.ownersComplaints || "");
       setValue("temperature", initialData.temperature || "");
       setValue("spo2", initialData.spo2 || "");
       setValue("respirationRate", initialData.respirationRate || "");
@@ -163,6 +165,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
       patientNumber: data.patientNumber ?? "",
       consultancyFee: data.consultancyFee ?? null,
       sex: data.sex ?? "",
+      ownersComplaints: data.ownersComplaints ?? "",
       temperature: data.temperature ?? "",
       spo2: data.spo2 ?? "",
       respirationRate: data.respirationRate ?? "",
@@ -278,6 +281,9 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                           searchable={true}
                           clearable={false}
                           placeholder="Select animal type"
+                          classNames={{
+                            input: "h-[45px]",
+                          }}
                         />
                       )}
                     />
@@ -289,7 +295,7 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                   </div>
 
                   <div>
-                    <Label htmlFor="patientNumber">Patient Number</Label>
+                    <Label htmlFor="patientNumber">Patient Name/Tag no:</Label>
                     <Controller
                       name="patientNumber"
                       control={control}
@@ -329,6 +335,9 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                           searchable={true}
                           clearable={false}
                           placeholder="Select sex"
+                          classNames={{
+                            input: "h-[45px]",
+                          }}
                         />
                       )}
                     />
@@ -349,6 +358,21 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                           }
                           placeholder="Enter weight"
                           value={field.value ?? ""}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="ownersComplaints">Owner's Complaints</Label>
+                    <Controller
+                      name="ownersComplaints"
+                      control={control}
+                      render={({ field }) => (
+                        <Textarea
+                          {...field}
+                          placeholder="Owner's complaints"
+                          rows={3}
                         />
                       )}
                     />

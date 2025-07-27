@@ -55,7 +55,7 @@ export interface PrescriptionResponseDto {
     age?: string;
     sex?: string;
     weight?: number;
-
+    ownersComplaints?: string | null;
     // Vital Signs
     temperature?: string;
     spo2?: string;

@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginLeft: 80,
   },
   headerTitle: {
     fontSize: 14,
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontSize: 9,
     color: "#000",
-    width: 100,
+    width: 150,
     alignItems: "flex-end",
     justifyContent: "center",
   },
@@ -202,6 +203,7 @@ interface PrescriptionData {
   age?: string;
   sex?: string;
   weight?: number;
+  ownersComplaints?: string;
   temperature?: string;
   spo2?: string;
   respirationRate?: string;
@@ -296,7 +298,7 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
 
         {/* Patient Info */}
         <View style={styles.patientInfo}>
-          <View style={styles.row}>
+          <View style={{ ...styles.row, marginBottom: 0, paddingBottom: 0 }}>
             <View style={styles.colLeft}>
               <View style={styles.field}>
                 <Text style={styles.label}>Owner's Name:</Text>
@@ -319,13 +321,10 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
 
               <View style={styles.field}>
                 <Text style={styles.label}>Email:</Text>
-                <Text style={styles.input}>{data.patient?.email || ""}</Text>
-              </View>
-
-              <View style={styles.field}>
-                <Text style={styles.label}>Owner's Complaints:</Text>
-                <Text style={styles.textArea}>
-                  {data.medicationHistory || ""}
+                <Text style={styles.input}>
+                  {data.patient?.email !== data.patient?.mobileNumber
+                    ? data.patient?.email
+                    : ""}
                 </Text>
               </View>
             </View>
@@ -356,7 +355,12 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
                   <Text style={styles.input}>{data.weight || ""}</Text>
                 </View>
               </View>
-
+              <View style={styles.field}>
+                <Text style={styles.label}>Owner's Complaints:</Text>
+                <Text style={styles.textArea}>
+                  {data.ownersComplaints || ""}
+                </Text>
+              </View>
               <View style={styles.field}>
                 <Text style={styles.label}>Patient's Picture:</Text>
                 <View style={styles.animalImage}>

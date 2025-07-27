@@ -51,6 +51,7 @@ export type PrescriptionResponseDto = {
    * @type number | undefined
    */
   weight?: number;
+  ownersComplaints?: null | string;
   /**
    * @type string | undefined
    */

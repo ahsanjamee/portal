@@ -64,6 +64,13 @@ export class ProfileService {
             throw new NotFoundException('End user profile not found');
         }
 
+        const ifEmailExist = await this.prisma.user.findFirst({
+            where: { email: updateData.email, id: { not: userId } }
+        });
+        if (ifEmailExist) {
+            throw new BadRequestException('Email already exists');
+        }
+
         // Prepare update data - only include fields that are provided
         const updateFields: any = {};
 
@@ -123,6 +130,13 @@ export class ProfileService {
 
         if (!user.adminUserProfile) {
             throw new NotFoundException('Admin user profile not found');
+        }
+
+        const ifEmailExist = await this.prisma.user.findFirst({
+            where: { email: updateData.email, id: { not: userId } }
+        });
+        if (ifEmailExist) {
+            throw new BadRequestException('Email already exists');
         }
 
         // Prepare update data - only include fields that are provided

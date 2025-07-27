@@ -31,4 +31,5 @@ export type CreatePrescriptionDto = {
    * @type string | undefined, date-time
    */
   followUpDate?: string;
+  ownersComplaints?: null | string;
 };

@@ -3806,6 +3806,16 @@
           "weight": {
             "type": "number"
           },
+          "ownersComplaints": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
           "temperature": {
             "type": "string"
           },
@@ -4149,6 +4159,16 @@
           "followUpDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "ownersComplaints": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           }
         },
         "required": [
@@ -4486,6 +4506,16 @@
           "followUpDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "ownersComplaints": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
           }
         },
         "required": [

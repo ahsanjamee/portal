@@ -196,6 +196,7 @@ model Prescription {
     age         String?
     sex         String?  // M/F
     weight      Float?   // in kg
+    ownersComplaints String?
     
     // Vital Signs
     temperature String?  // Normal, fever, etc.
