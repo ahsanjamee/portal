@@ -1,5 +1,6 @@
 import {
   Document,
+  Font,
   Image,
   Page,
   StyleSheet,
@@ -8,18 +9,25 @@ import {
 } from "@react-pdf/renderer";
 import React from "react";
 
-// Register fonts if needed
-// Font.register({
-//   family: 'Roboto',
-//   src: 'https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2',
-// });
+// Register Bengali fonts using TTF
+// Option 1: Using Google Fonts TTF (if available)
+Font.register({
+  family: "NotoSansBengali",
+  fonts: [
+    { src: "/fonts/static/NotoSansBengali-Regular.ttf" },
+    { src: "/fonts/static/NotoSansBengali-Bold.ttf", fontWeight: "bold" },
+  ],
+});
+
+// Use system fonts that support Bengali as fallback
+const bengaliFontFamily = "NotoSansBengali";
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "white",
     padding: 15,
-    fontFamily: "Helvetica",
+    fontFamily: bengaliFontFamily,
     fontSize: 8,
   },
   container: {
@@ -55,11 +63,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 3,
     color: "#000",
+    fontFamily: bengaliFontFamily,
   },
   headerText: {
     fontSize: 8,
     marginBottom: 1,
     color: "#000",
+    fontFamily: bengaliFontFamily,
   },
   doctorInfo: {
     textAlign: "right",
@@ -68,6 +78,7 @@ const styles = StyleSheet.create({
     width: 150,
     alignItems: "flex-end",
     justifyContent: "center",
+    fontFamily: bengaliFontFamily,
   },
   row: {
     flexDirection: "row",
@@ -88,12 +99,14 @@ const styles = StyleSheet.create({
     fontSize: 8,
     marginBottom: 1,
     color: "#000",
+    fontFamily: bengaliFontFamily,
   },
   input: {
     border: "1px solid #000",
     padding: 2,
     fontSize: 8,
     minHeight: 12,
+    fontFamily: bengaliFontFamily,
   },
   patientInfo: {
     backgroundColor: "#f0f0f0",
@@ -119,6 +132,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
     color: "#000",
+    fontFamily: bengaliFontFamily,
   },
   medicationItem: {
     marginBottom: 4,
@@ -129,10 +143,12 @@ const styles = StyleSheet.create({
   medicationName: {
     fontWeight: "bold",
     fontSize: 8,
+    fontFamily: bengaliFontFamily,
   },
   medicationDetails: {
     fontSize: 7,
     marginTop: 1,
+    fontFamily: bengaliFontFamily,
   },
   adviceSection: {
     backgroundColor: "#f0f8f0",
@@ -150,12 +166,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderTop: "1px solid #000",
     paddingTop: 5,
+    fontFamily: bengaliFontFamily,
   },
   textArea: {
     border: "1px solid #000",
     padding: 3,
     fontSize: 8,
     minHeight: 20,
+    fontFamily: bengaliFontFamily,
   },
   animalImage: {
     width: 60,
@@ -165,6 +183,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize: 7,
     color: "#666",
+    fontFamily: bengaliFontFamily,
   },
   gridRow: {
     flexDirection: "row",
@@ -246,7 +265,7 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>ADI PET and LIVESTOCK CARE</Text>
             <Text style={styles.headerText}>
-              Chamber: 87 Paltan Tower, Purana Paltan, Paltan line
+              Chamber: 87 Paltan Tower, Purana Paltan Lane
             </Text>
             <Text style={styles.headerText}>Dhaka-1000, Bangladesh</Text>
             <Text style={styles.headerText}>
@@ -370,7 +389,9 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
                       style={{ width: 60, height: 45 }}
                     />
                   ) : (
-                    <Text>No Image</Text>
+                    <Text style={{ fontFamily: bengaliFontFamily }}>
+                      No Image
+                    </Text>
                   )}
                 </View>
               </View>
@@ -454,13 +475,24 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
         {/* Advice Section */}
         <View style={styles.adviceSection}>
           <Text style={styles.sectionTitle}>Advice:</Text>
-          <Text style={{ fontSize: 8 }}>{data.advice || ""}</Text>
+          <Text
+            style={{
+              fontSize: 8,
+              fontFamily: bengaliFontFamily,
+            }}
+          >
+            {data.advice || ""}
+          </Text>
         </View>
 
         {/* Footer */}
         <View style={styles.footer}>
           <Image style={styles.qrCode} src={qrUrl} />
-          <Text>
+          <Text
+            style={{
+              fontFamily: bengaliFontFamily,
+            }}
+          >
             © All Rights Reserved by Dr.Md.Rakibur Rahman(Rakib). Note:
             Preserve The Prescription for Next Reference.
           </Text>
