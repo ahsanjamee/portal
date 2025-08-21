@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     color: "#000",
     fontFamily: bengaliFontFamily,
+    whiteSpace: "nowrap",
   },
   input: {
     border: "1px solid #000",
@@ -294,8 +295,8 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
           <View style={styles.colRight}>
             <View style={{ flexDirection: "row", gap: 8 }}>
               <View style={[styles.field, { flex: 1 }]}>
-                <Text style={styles.label}>Consultancy Fee(Tk):</Text>
-                <Text style={styles.input}>{data.consultancyFee || "500"}</Text>
+                <Text style={{ ...styles.label }}>Consultancy Fee:</Text>
+                <Text style={styles.input}>{data.consultancyFee || ""}</Text>
               </View>
               <View style={[styles.field, { flex: 1 }]}>
                 <Text style={styles.label}>Date:</Text>
@@ -321,9 +322,7 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
             <View style={styles.colLeft}>
               <View style={styles.field}>
                 <Text style={styles.label}>Owner's Name:</Text>
-                <Text style={styles.input}>
-                  {data.patient?.name || "Md. Rakibur Rahman"}
-                </Text>
+                <Text style={styles.input}>{data.patient?.name || ""}</Text>
               </View>
               <View style={styles.field}>
                 <Text style={styles.label}>Address:</Text>
@@ -493,8 +492,8 @@ const PrescriptionDocument: React.FC<PrescriptionDocumentProps> = ({
               fontFamily: bengaliFontFamily,
             }}
           >
-            © All Rights Reserved by Dr.Md.Rakibur Rahman(Rakib). Note:
-            Preserve The Prescription for Next Reference.
+            © All Rights Reserved. Note: Preserve The Prescription for Next
+            Reference.
           </Text>
           <View></View>
         </View>
