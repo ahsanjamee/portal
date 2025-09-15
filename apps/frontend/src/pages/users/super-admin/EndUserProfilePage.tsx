@@ -197,7 +197,29 @@ export const EndUserProfilePage = () => {
             </div>
           </>
         );
-
+      case "PET_OWNER":
+        return (
+          <>
+            <div>
+              <Label htmlFor="petBird">Pet Bird</Label>
+              <Input
+                id="petBird"
+                value={farmData.petBird || "N/A"}
+                disabled
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="petAnimal">Pet Animal</Label>
+              <Input
+                id="petAnimal"
+                value={farmData.petAnimal || "N/A"}
+                disabled
+                className="mt-1"
+              />
+            </div>
+          </>
+        );
       default:
         return (
           <div>

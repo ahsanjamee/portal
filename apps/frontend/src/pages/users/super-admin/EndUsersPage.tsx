@@ -31,6 +31,7 @@ export const EndUsersPage = () => {
     | "POULTRY_FARMER"
     | "FISH_FARMER"
     | "AGRICULTURE_FARMER"
+    | "PET_OWNER"
     | ""
   >("");
   const consentModal = useModal(ConsentModal);
@@ -172,7 +173,9 @@ export const EndUsersPage = () => {
                       ? "cyan"
                       : userType === "AGRICULTURE_FARMER"
                         ? "orange"
-                        : "gray"
+                        : userType === "PET_OWNER"
+                          ? "pink"
+                          : "gray"
               }
               size="md"
               w={150}
@@ -288,6 +291,7 @@ export const EndUsersPage = () => {
             { value: "POULTRY_FARMER", label: "Poultry Farmer" },
             { value: "FISH_FARMER", label: "Fish Farmer" },
             { value: "AGRICULTURE_FARMER", label: "Agriculture Farmer" },
+            { value: "PET_OWNER", label: "Pet Owner" },
           ]}
           clearable
           w={200}

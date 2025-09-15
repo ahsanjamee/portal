@@ -379,12 +379,18 @@ export class SuperAdminService {
             'Type of Agriculture'
         ];
 
+        const petOwnerHeaders = [
+            'Pet Bird',
+            'Pet Animal'
+        ];
+
         // Create separate sheets for each user type
         const userTypeSheets = {
             DAIRY_FARMER: { headers: [...baseHeaders, ...dairyHeaders], data: [] as any[] },
             POULTRY_FARMER: { headers: [...baseHeaders, ...poultryHeaders], data: [] as any[] },
             FISH_FARMER: { headers: [...baseHeaders, ...fishHeaders], data: [] as any[] },
             AGRICULTURE_FARMER: { headers: [...baseHeaders, ...agricultureHeaders], data: [] as any[] },
+            PET_OWNER: { headers: [...baseHeaders, ...petOwnerHeaders], data: [] as any[] },
         };
 
         // Organize data by user type
@@ -433,6 +439,12 @@ export class SuperAdminService {
                     farmDataRow = [
                         farmData?.totalAgricultureLandDecimal || 0,
                         farmData?.typeOfAgriculture || 'N/A'
+                    ];
+                    break;
+                case 'PET_OWNER':
+                    farmDataRow = [
+                        farmData?.petBird || 'N/A',
+                        farmData?.petAnimal || 'N/A',
                     ];
                     break;
             }

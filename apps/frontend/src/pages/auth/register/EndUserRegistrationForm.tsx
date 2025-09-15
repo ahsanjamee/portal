@@ -484,6 +484,43 @@ export const EndUserRegistrationForm = ({
                   />
                 </>
               )}
+
+              {/* Pet Owner Fields */}
+              {selectedUserType === "PET_OWNER" && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="farmData.petBird"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm leading-5">
+                          Pet Bird (optional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Parrot" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="farmData.petAnimal"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm leading-5">
+                          Pet Animal (optional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Dog, Cat" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
             </div>
           )}
 

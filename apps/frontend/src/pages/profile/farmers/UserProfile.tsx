@@ -72,6 +72,16 @@ const agricultureFarmSchema = z.object({
   typeOfAgriculture: z.string().min(1, "Type of agriculture is required"),
 });
 
+const petOwnerSchema = z
+  .object({
+    petBird: z.string().min(1, "Pet bird is required").optional(),
+    petAnimal: z.string().min(1, "Pet animal is required").optional(),
+  })
+  .refine((data) => !!data.petBird || !!data.petAnimal, {
+    message: "Either pet bird or pet animal is required",
+    path: ["petAnimal"],
+  });
+
 // Function to get the appropriate schema based on user type
 const getValidationSchema = (userType: string) => {
   const baseSchema = baseProfileSchema;
@@ -92,6 +102,10 @@ const getValidationSchema = (userType: string) => {
     case "AGRICULTURE_FARMER":
       return baseSchema.extend({
         farmData: agricultureFarmSchema,
+      });
+    case "PET_OWNER":
+      return baseSchema.extend({
+        farmData: petOwnerSchema,
       });
     default:
       return baseSchema.extend({
@@ -243,7 +257,8 @@ export const UserProfile = () => {
       ? (formData.farmData as any)
       : (userProfile.farmData as any);
 
-    switch (userProfile.userType) {
+    const userTypeValue = userProfile.userType as string;
+    switch (userTypeValue) {
       case "DAIRY_FARMER":
         return (
           <>
@@ -645,6 +660,58 @@ export const UserProfile = () => {
               {getFieldError("farmData.typeOfAgriculture") && (
                 <p className="text-sm text-red-500 mt-1">
                   {getFieldError("farmData.typeOfAgriculture")}
+                </p>
+              )}
+            </div>
+          </>
+        );
+
+      case "PET_OWNER":
+        return (
+          <>
+            <div>
+              <Label htmlFor="petBird">Pet Bird</Label>
+              <Input
+                id="petBird"
+                value={
+                  isEditing ? farmData.petBird || "" : farmData.petBird || "N/A"
+                }
+                disabled={!isEditing}
+                onChange={(e) =>
+                  isEditing && updateFarmData("petBird", e.target.value)
+                }
+                className={cn(
+                  "mt-1",
+                  getFieldError("farmData.petBird") && "border-red-500"
+                )}
+              />
+              {getFieldError("farmData.petBird") && (
+                <p className="text-sm text-red-500 mt-1">
+                  {getFieldError("farmData.petBird")}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="petAnimal">Pet Animal</Label>
+              <Input
+                id="petAnimal"
+                value={
+                  isEditing
+                    ? farmData.petAnimal || ""
+                    : farmData.petAnimal || "N/A"
+                }
+                disabled={!isEditing}
+                onChange={(e) =>
+                  isEditing && updateFarmData("petAnimal", e.target.value)
+                }
+                className={cn(
+                  "mt-1",
+                  getFieldError("farmData.petAnimal") && "border-red-500"
+                )}
+              />
+              {getFieldError("farmData.petAnimal") && (
+                <p className="text-sm text-red-500 mt-1">
+                  {getFieldError("farmData.petAnimal")}
                 </p>
               )}
             </div>

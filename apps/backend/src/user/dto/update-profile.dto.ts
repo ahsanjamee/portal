@@ -27,6 +27,11 @@ export interface UpdateAgricultureFarmDataDto {
     typeOfAgriculture?: string & tags.MinLength<1>;
 }
 
+export interface UpdatePetOwnerDataDto {
+    petBird?: string & tags.MinLength<1>;
+    petAnimal?: string & tags.MinLength<1>;
+}
+
 // End User Profile Update DTO
 export interface UpdateEndUserProfileDto {
     userType?: EndUserType;
@@ -34,7 +39,7 @@ export interface UpdateEndUserProfileDto {
     address?: string & tags.MinLength<1>;
     email?: string & tags.Format<"email">;
     photo?: string;
-    farmData?: UpdateDairyFarmDataDto | UpdatePoultryFarmDataDto | UpdateFishFarmDataDto | UpdateAgricultureFarmDataDto;
+    farmData?: UpdateDairyFarmDataDto | UpdatePoultryFarmDataDto | UpdateFishFarmDataDto | UpdateAgricultureFarmDataDto | UpdatePetOwnerDataDto;
 }
 
 // Admin User Profile Update DTO

@@ -85,6 +85,14 @@ const poultryFarmDataSchema = z.object({
 	totalEggProductionPerDay: z.number().min(0, { message: 'Egg production must be non-negative' }),
 });
 
+const petOwnerDataSchema = z.object({
+	petBird: z.string().min(1, { message: 'Pet bird is required' }).optional(),
+	petAnimal: z.string().min(1, { message: 'Pet animal is required' }).optional(),
+}).refine((data) => !!data.petBird || !!data.petAnimal, {
+	message: 'Either pet bird or pet animal is required',
+	path: ['petAnimal'],
+});
+
 // End User Registration Schema (based on CreateEndUserDto)
 export const endUserRegistrationSchema = () =>
 	z.discriminatedUnion('userType', [
@@ -120,6 +128,14 @@ export const endUserRegistrationSchema = () =>
 			address: z.string().min(1, { message: 'Address is required' }),
 			farmData: poultryFarmDataSchema,
 		}),
+		z.object({
+			authType: z.literal('END_USER'),
+			mobileNumber: z.string().min(1, { message: 'Mobile number is required' }),
+			userType: z.literal('PET_OWNER'),
+			name: z.string().min(1, { message: 'Name is required' }),
+			address: z.string().min(1, { message: 'Address is required' }),
+			farmData: petOwnerDataSchema,
+		}),
 	]);
 
 export type EndUserRegistrationType = z.infer<ReturnType<typeof endUserRegistrationSchema>>;
@@ -147,7 +163,7 @@ export type AdminUserRegistrationType = z.infer<ReturnType<typeof adminUserRegis
 export type AuthType = 'END_USER' | 'ADMIN' | 'SUPER_ADMIN';
 
 // User Types for End Users (from portal-api-client)
-export const END_USER_TYPES = ['DAIRY_FARMER', 'POULTRY_FARMER', 'FISH_FARMER', 'AGRICULTURE_FARMER'] as const;
+export const END_USER_TYPES = ['DAIRY_FARMER', 'POULTRY_FARMER', 'FISH_FARMER', 'AGRICULTURE_FARMER', 'PET_OWNER'] as const;
 export type EndUserType = typeof END_USER_TYPES[number];
 
 // User Types for Admin Users (from portal-api-client)

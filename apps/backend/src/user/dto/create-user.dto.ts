@@ -33,12 +33,18 @@ export interface AgricultureFarmDataDto {
     typeOfAgriculture: string & tags.MinLength<1>;
 }
 
+// Pet Owner data (kept flexible for now)
+export interface PetOwnerDataDto {
+    petBird?: string & tags.MinLength<1>;
+    petAnimal?: string & tags.MinLength<1>;
+}
+
 // End User Registration DTO
 export interface CreateEndUserDto extends CreateUserDto {
     userType: EndUserType;
     name: string & tags.MinLength<1>;
     address: string & tags.MinLength<1>;
-    farmData: DairyFarmDataDto | PoultryFarmDataDto | FishFarmDataDto | AgricultureFarmDataDto;
+    farmData: DairyFarmDataDto | PoultryFarmDataDto | FishFarmDataDto | AgricultureFarmDataDto | PetOwnerDataDto;
 }
 
 // Admin User Registration DTO

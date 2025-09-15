@@ -41,7 +41,8 @@ export type PostUserRegisterEndUser201 = {
       | "DAIRY_FARMER"
       | "POULTRY_FARMER"
       | "FISH_FARMER"
-      | "AGRICULTURE_FARMER";
+      | "AGRICULTURE_FARMER"
+      | "PET_OWNER";
     /**
      * @type string
      */
@@ -98,7 +99,8 @@ export type PostUserRegisterEndUserMutationResponse = {
       | "DAIRY_FARMER"
       | "POULTRY_FARMER"
       | "FISH_FARMER"
-      | "AGRICULTURE_FARMER";
+      | "AGRICULTURE_FARMER"
+      | "PET_OWNER";
     /**
      * @type string
      */

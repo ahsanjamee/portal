@@ -23,6 +23,7 @@ enum EndUserType {
     POULTRY_FARMER
     FISH_FARMER
     AGRICULTURE_FARMER
+    PET_OWNER
 }
 
 enum AdminUserType {

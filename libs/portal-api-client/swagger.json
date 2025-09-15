@@ -30,6 +30,9 @@
                 },
                 {
                   "const": "AGRICULTURE_FARMER"
+                },
+                {
+                  "const": "PET_OWNER"
                 }
               ]
             },
@@ -642,6 +645,9 @@
                             },
                             {
                               "const": "AGRICULTURE_FARMER"
+                            },
+                            {
+                              "const": "PET_OWNER"
                             }
                           ]
                         },
@@ -1023,6 +1029,9 @@
                                 },
                                 {
                                   "const": "AGRICULTURE_FARMER"
+                                },
+                                {
+                                  "const": "PET_OWNER"
                                 }
                               ]
                             },
@@ -1520,6 +1529,9 @@
                                 },
                                 {
                                   "const": "AGRICULTURE_FARMER"
+                                },
+                                {
+                                  "const": "PET_OWNER"
                                 }
                               ]
                             },
@@ -2942,6 +2954,9 @@
               },
               {
                 "const": "AGRICULTURE_FARMER"
+              },
+              {
+                "const": "PET_OWNER"
               }
             ]
           },
@@ -3053,6 +3068,9 @@
               },
               {
                 "const": "AGRICULTURE_FARMER"
+              },
+              {
+                "const": "PET_OWNER"
               }
             ]
           },
@@ -3243,6 +3261,9 @@
               },
               {
                 "const": "AGRICULTURE_FARMER"
+              },
+              {
+                "const": "PET_OWNER"
               }
             ]
           },
@@ -3267,6 +3288,9 @@
               },
               {
                 "$ref": "#/components/schemas/AgricultureFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/PetOwnerDataDto"
               }
             ]
           },
@@ -3384,6 +3408,20 @@
           }
         },
         "required": ["totalAgricultureLandDecimal", "typeOfAgriculture"]
+      },
+      "PetOwnerDataDto": {
+        "type": "object",
+        "properties": {
+          "petBird": {
+            "type": "string",
+            "minLength": 1
+          },
+          "petAnimal": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": []
       },
       "CreateAdminUserDto": {
         "type": "object",
@@ -3602,6 +3640,9 @@
               },
               {
                 "const": "AGRICULTURE_FARMER"
+              },
+              {
+                "const": "PET_OWNER"
               }
             ]
           },
@@ -3633,6 +3674,9 @@
               },
               {
                 "$ref": "#/components/schemas/UpdateAgricultureFarmDataDto"
+              },
+              {
+                "$ref": "#/components/schemas/UpdatePetOwnerDataDto"
               }
             ]
           }
@@ -3715,6 +3759,20 @@
             "minimum": 0
           },
           "typeOfAgriculture": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": []
+      },
+      "UpdatePetOwnerDataDto": {
+        "type": "object",
+        "properties": {
+          "petBird": {
+            "type": "string",
+            "minLength": 1
+          },
+          "petAnimal": {
             "type": "string",
             "minLength": 1
           }

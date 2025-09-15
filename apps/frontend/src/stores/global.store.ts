@@ -24,7 +24,7 @@ export type EndUserProfile = {
     farmData: any;
     userId: string;
     photo?: string | null;
-    userType: 'DAIRY_FARMER' | 'POULTRY_FARMER' | 'FISH_FARMER' | 'AGRICULTURE_FARMER';
+    userType: 'DAIRY_FARMER' | 'POULTRY_FARMER' | 'FISH_FARMER' | 'AGRICULTURE_FARMER' | 'PET_OWNER';
 }
 
 export type GlobalStoreType = {

@@ -275,6 +275,8 @@ export const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
                             { label: "Chicken", value: "Chicken" },
                             { label: "Duck", value: "Duck" },
                             { label: "Fish", value: "Fish" },
+                            { label: "Pet Bird", value: "Pet Bird" },
+                            { label: "Pet Animal", value: "Pet Animal" },
                             { label: "Other", value: "Other" },
                           ]}
                           {...field}
