@@ -87,10 +87,13 @@ export const PrescriptionIndex: React.FC = () => {
 
   // Fetch patients for the form using the service
   const { data: patientsData, isLoading: patientsLoading } =
-    prescriptionServiceHooks.useGetPatients({
-      page: 1,
-      pageSize: 1000, // Get all patients for the form
-    });
+    prescriptionServiceHooks.useGetPatients(
+      {
+        page: 1,
+        pageSize: 9999, // Get all patients for the form
+      },
+      undefined
+    );
 
   // Fetch prescription for current
   const {
